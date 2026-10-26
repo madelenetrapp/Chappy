@@ -1,0 +1,26 @@
+{
+  "name": "chappy",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madelenetrapp/Chappy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madelenetrapp/Chappy/issues"
+  },
+  "homepage": "https://github.com/madelenetrapp/Chappy#readme"
+}
