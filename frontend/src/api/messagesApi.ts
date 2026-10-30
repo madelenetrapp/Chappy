@@ -17,4 +17,14 @@ async function sendMessage(text: string): Promise<ChatMessage> {
   return response.json();
 }
 
-export { sendMessage }
+async function getMessages(): Promise<ChatMessage[]> {
+  const response = await fetch(`${API_URL}/api/messages`);
+
+  if (!response.ok) {
+    throw new Error("Kunde inte hämta chatthistoriken");
+  }
+
+  return response.json();
+}
+
+export { sendMessage, getMessages  }
