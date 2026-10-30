@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { getHealth } from "./api/healthApi.js";
+import ChatInput from "./components/ChatInput.js";
 // import { error } from "node:console";
 
 //useEffect låter koden köras när komponenten monteras
@@ -11,9 +12,12 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
   return (
-  <div>Chappy</div>
-);
-  
+    <div>
+      <h1>Chappy</h1>
+      <ChatInput/>
+    </div>
+  );
+
 }
 export default App;
 
