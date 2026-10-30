@@ -3,7 +3,7 @@ import { getHealth } from "./api/healthApi.js";
 import ChatInput from "./components/ChatInput.js";
 import type { ChatMessage } from "./types/ChatMessage.js";
 import ChatMessageComponent from "./components/ChatMessage.js";
-import { sendMessage } from "./api/messagesApi.js";
+import { getMessages, sendMessage } from "./api/messagesApi.js";
 // import { error } from "node:console";
 
 //useEffect låter koden köras när komponenten monteras
@@ -26,6 +26,23 @@ useEffect(() => {
     .then((data) => console.log("Backend:", data))
     .catch((error) => console.error(error));
 }, []);
+
+useEffect(() => {
+  getMessages()
+  .then((messages) => {
+    setMessages(
+      messages.filter(
+        (message) =>
+          typeof message.id === "string" &&
+        typeof message.text === "string" &&
+        (message.sender === "user" || message.sender === "ai")
+      )
+    );
+  })
+  .catch((error) => console.error(error));
+}, []);
+
+//.filter är för att sortera bort gamala meddelnaden -  testdatan (tillfällig)
 
 return (
   <div>
