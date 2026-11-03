@@ -1,10 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { routerConfig } from "./routes.js";
+
+// Skapar routern utifrån sidorna i routes.tsx
+const config = createBrowserRouter(routerConfig);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={config} />
   </StrictMode>,
 )
