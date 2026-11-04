@@ -15,54 +15,100 @@ function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   // Körs när användaren skickar ett meddelande
-  async function handleSend(text: string) {
+  async function handleSend(text: string): Promise<void> {
     try {
-      const newMessage = await sendMessage(text); // Skickar till backend
-      setMessages((previous) => [...previous, newMessage]); // Lägger till i state
+
+        const newMessages = await sendMessage(text);
+
+ setMessages((previousMessages) => [
+        ...previousMessages,
+        newMessages,
+      ]);
     } catch (error) {
       console.error("Kunde inte skicka meddelandet:", error);
     }
   };
 
-  // Kontrollerar backend när komponenten monteras
-useEffect(() => {
-  getHealth()
-    .then((data) => console.log("Backend:", data))
-    .catch((error) => console.error(error));
-}, []);
+// Hämtar tidigare meddelanden från backend 
+async function loadMessages(): Promise<void> {
+  try {
+    const savedMessages = await getMessages();
 
-// Hämtar sparade meddelanden när komponenten monteras
-useEffect(() => {
-  getMessages()
-  .then((messages) => {
-    setMessages(
-      messages.filter(
-        (message) =>
-          typeof message.id === "string" && // Måste ha ID
-        typeof message.text === "string" && // Måste ha text
-        (message.sender === "user" || message.sender === "ai") // Giltig avsändare
-      )
-    );
-  })
-  .catch((error) => console.error(error));
-}, []);
-
-//.filter är för att sortera bort gamala meddelnaden -  testdatan (tillfällig)
-
-// Bestämmer vad som ska visas på sidan
-return (
-  <div>
-    <h1>Chappy</h1>
-
-    {/* Skapar en ChatMessage-komponent för varje meddelande */}
-    {messages.map((message) => (
-      <ChatMessageComponent key={message.id} message={message} />
-    ))}
-    {/* Skickar handleSend till inmatningskomponenten */}
-    <ChatInput onSend={handleSend} />
-  </div>
+    //filterar bort data som inte har rätt struktur
+    const validMessages = savedMessages.filter(
+    (messages) =>
+      typeof messages.id === "string" &&
+    typeof messages.text === "string" &&
+    (messages.sender === "user" || messages.sender === "ai")
 );
 
+//sparar meddelandena i react state.
+setMessages(validMessages);
+  } catch (error) {
+    console.error("Kunde inte hmta meddelanden:", error);
+  }
+}
+
+//ontrollerar att backend svarar
+async function checkBackend(): Promise<void> {
+  try {
+    const data = await getHealth();
+    console.log("Backend", data);
+  } catch (error) {
+    console.log("Kunde inte ansluta till backend:", error);
+  }
+  
+}
+
+//kör funktionerna när komponenten monteras
+useEffect(() => {
+  void checkBackend();
+  void loadMessages();
+}, []); //så att meddelandena hämtas när chatten öppnas inte varje gång react uppdaterar sidan
+
+//renderar chattsidan enligt Figma
+return (
+  <div className="chat-layout">
+    <header className="chat-header">
+      <h1>Chappy</h1>
+    </header>
+
+    {/* de tre huvuud-blocken  */}
+  <div className="chat-main">
+    <aside className="chat-sidebar">
+      <section className="sidebar-section">
+        <h2>Tillgängliga chattar</h2>
+      </section>
+
+      <section className="sidebar-section">
+        <h2>Kontakter</h2>
+      </section>
+    </aside>
+
+    <main className="chat-content">
+      <div className="chat-messages">
+        {messages.map((messages) => (
+          <ChatMessageComponent
+          key={messages.id}
+          message={messages}
+          />
+        ))}
+      </div>
+
+        {/* fält att skicka meddelandet i */}
+          <div className="chat-input-area">
+            <ChatInput onSend={handleSend} />
+          </div>
+    </main>
+
+    {/* högerpanel förspråkinställningar */}
+    <aside className="chat-settings">
+      <h2>Språkinställningar</h2>
+    </aside>
+
+  </div>
+  </div>
+);
 }
 
 export default App; // Gör komponenten tillgänglig för main.tsx
