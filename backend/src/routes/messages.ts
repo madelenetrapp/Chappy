@@ -1,5 +1,5 @@
 import express, { type Router } from "express";
-import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"; // Kommandon för att spara och hämta data
+import { GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"; // Kommandon för att spara och hämta data
 import { dynamoDB } from "../db/dynamoDB.js";  // Databasanslutningen
 
 //skapar en separat router för meddelandena
@@ -64,6 +64,30 @@ router.get("/", async (_req, res) => {
     // Returnerar fel om hämtningen misslyckas
     return res.status(500).json({
       error: "Kunde inte hämta chatthistoriken",
+    });
+  }
+});
+
+// // GET: Hämtar chattens metadata från DynamoDB
+// Metadata beskriver chatten där meddelandena finns.
+router.get("/metadata", async (_req, res) => {
+  try {
+    const result = await dynamoDB.send(
+      new GetCommand({
+        TableName: "Chappy",
+Key: {
+  pk: "CHAT#456",
+  sk: "METADATA",
+},
+      })
+    );
+
+    // Skickar tillbaka metadata, eller null om chatten saknas
+    return res.status(200).json(result.Item ?? null);
+  } catch {
+    // Returnerar fel om hämtningen misslyckas
+    return res.status(500).json({
+      error: "Kunde inte hämta chattens metadata",
     });
   }
 });
