@@ -1,6 +1,7 @@
 import express from "express"; // Ramverk för backend och API
 import cors from "cors"; // Tillåter anrop från frontend
 import messagesRouter from "./routes/messages.js"; //koppla router till server
+import { authenticationRouter } from "./routes/authentication.js";
 
 const app = express(); // Skapar Express-servern
 const PORT = Number(process.env.PORT) || 3001; // Port från miljövariabel, annars 3001
@@ -14,6 +15,9 @@ app.use(
 
 // Gör JSON från inkommande anrop tillgänglig i req.body
 app.use(express.json());
+
+//Kopplar registreringen och inloggningen till API:et.
+app.use("/api/authentication", authenticationRouter)
 
 //kopplar meddelandet routern till API:et
 app.use("/api/messages", messagesRouter)

@@ -5,4 +5,4 @@ function ChatPage() {
   return <App />;
 }
 
-export default ChatPage;
+export default ChatPage
