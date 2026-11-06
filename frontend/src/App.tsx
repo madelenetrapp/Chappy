@@ -1,5 +1,5 @@
-
-import { useEffect, useState } from "react"; // React-hooks
+import "./App.css";
+import { useEffect, useRef, useState } from "react"; // React-hooks
 import { getHealth } from "./api/healthApi.js"; // Kontrollerar backend
 import ChatInput from "./components/ChatInput.js"; // Inmatningsfältet
 import type { ChatMessage } from "./types/ChatMessage.js"; // Typ för meddelanden
@@ -13,6 +13,9 @@ function App() {
 
   // State som innehåller alla meddelanden som visas
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  //Referens till området som innehåller de skickade meddelandena
+  const messageRef = useRef<HTMLDivElement>(null);
 
   // Körs när användaren skickar ett meddelande
   async function handleSend(text: string): Promise<void> {
@@ -60,11 +63,20 @@ async function checkBackend(): Promise<void> {
   
 }
 
-//kör funktionerna när komponenten monteras
+//kör funktionerna när komponenten monteras/hämtar meddelandena när chatten öppnas
 useEffect(() => {
   void checkBackend();
   void loadMessages();
 }, []); //så att meddelandena hämtas när chatten öppnas inte varje gång react uppdaterar sidan
+
+
+//Scrolla längst ner när meddelandelistan uppdateras
+useEffect(() => {
+  if (!messageRef.current) return;
+
+  messageRef.current.scrollTop = messageRef.current?.scrollHeight;
+}, [messages]);
+
 
 //renderar chattsidan enligt Figma
 return (
@@ -86,7 +98,7 @@ return (
     </aside>
 
     <main className="chat-content">
-      <div className="chat-messages">
+      <div className="chat-messages" ref={messageRef}>
         {messages.map((messages) => (
           <ChatMessageComponent
           key={messages.id}

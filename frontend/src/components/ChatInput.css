@@ -1,0 +1,63 @@
+
+
+
+/*  MEDDELANDEFÄLT  */
+
+/* Placerar skrivfältet längst ner i chattområdet */
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Skrivfältets storlek, bakgrund och kantlinje */
+.chat-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #65769d;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+
+/* Textens utseende i skrivfältet */
+
+/* Utseende på platshållartexten */
+
+/* Skicka-knappens storlek, färg och placering */
+.chat-send-button {
+  padding: 12px 20px;
+  background-color: #1b2945;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Skicka-knappens utseende vid hover */
+
+/* Gör att textfälteteväxer på höjden istället för på bredden */
+.chat-input {
+  resize: none;
+  overflow-y: hidden;
+  field-sizing: content;
+  max-height: 200px;
+}
+
+/* låter skrivfältet använda tillgängligt utrymme */
+.chat-input {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Ändrar knappens färg när muspekaren hålls över den. */
+.chat-send-button:hover {
+  background-color: #30466e;
+}
+
+/*  RESPONSIV DESIGN  */
+
+/* Anpassar skrivfältet för mindre skärmar */
+

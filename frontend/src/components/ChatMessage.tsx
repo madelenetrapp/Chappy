@@ -1,12 +1,15 @@
 import type { ChatMessage as ChatMassageType } from "../types/ChatMessage";
+import "./ChatMessage.css"
 
 type Props = {
   message: ChatMassageType;
 };
 
 function ChatMassage({ message }: Props) {
-  return <p>{message.text}</p>;
-}
+  return <p className={`chat-message ${message.sender}`}>
+    {message.text}
+    </p>
+};
 
 export default ChatMassage;
 

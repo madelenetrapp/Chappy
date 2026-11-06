@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 // import { ChatMessage } from "./types/ChatMessage";
+import "./ChatInput.css"
 
 type Props = {
   onSend: (text: string) => void;
@@ -29,11 +30,9 @@ function ChatInput({ onSend }: Props) {
   }
 
   return (
-    <div>
-      <input
-        type="text"
-        // Skapar ett textfält.
-
+    <div className="chat-input-container">
+      <textarea 
+      className="chat-input"
         value={text}
         // Visar värdet från Reacts state i textfältet
 
@@ -41,13 +40,9 @@ function ChatInput({ onSend }: Props) {
         // Uppdaterar state varje gång användaren skriver.
 
         placeholder="Skriv ett meddelande..."
-        
+        rows={1}
       />
-
-      <button type="button" onClick={handleSend}>
-        Skicka
-      </button>
-      {/* Kör handleSend när användaren klickar på knappen. */}
+      <button className="chat-send-button" type="button" onClick={handleSend}>Skicka</button>
     </div>
   );
 }
