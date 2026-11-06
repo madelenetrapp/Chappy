@@ -1,0 +1,50 @@
+.chat-message {
+  background-color: #ffffff;
+  border: 1px solid #65769d;
+  border-radius: 5px;
+  padding: 6px 10px;
+  max-width: 75%;
+  min-width: 0;
+  width: fit-content;
+  overflow-wrap: anywhere;   /*betyder att långa ord eller textsträngar får brytas mitt i ordet om de annars skulle sticka utanför meddelandebubblan.*/
+  font-size: 14px;
+  color: #222222;
+  white-space: normal;        /*Tillåter texten att radbrytas automatiskt vid mellanslag*/
+}
+
+/* användaren placeras alltid till höger */
+.chat-message.user {
+  align-self: flex-end;
+  background-color: #ffffff;
+}
+
+/* AI-meddelanden placeras till vänster */
+.chat-message.ai {
+  align-self: flex-start;
+  background-color: #d9f7fa;
+}
+
+
+
+/*  MEDDELANDEBUBBLOR  */
+
+/* Gemensam styling för alla meddelandebubblor */
+
+/* Användarens meddelanden placeras till höger */
+
+/* Användarens meddelanden har vit bakgrund */
+
+/* AI-meddelanden placeras till vänster */
+
+/* AI-meddelanden har ljusblå bakgrund */
+
+/* Begränsar meddelandebubblornas bredd */
+
+/* Anpassar bubblornas höjd efter texten */
+
+
+/* RESPONSIVE DESIGN */
+/* Anpassar meddelandebubblorna för mobilskärmar */
+
+
+

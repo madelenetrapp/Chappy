@@ -1,4 +1,4 @@
-
+import "./App.css";
 import { useEffect, useState } from "react"; // React-hooks
 import { getHealth } from "./api/healthApi.js"; // Kontrollerar backend
 import ChatInput from "./components/ChatInput.js"; // Inmatningsfältet

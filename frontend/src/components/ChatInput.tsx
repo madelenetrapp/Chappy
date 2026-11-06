@@ -1,5 +1,6 @@
 import { useState } from "react";
 // import { ChatMessage } from "./types/ChatMessage";
+import "./ChatInput.css"
 
   type Props = {
     onSend: (text: string) => void;
@@ -16,14 +17,14 @@ function ChatInput({ onSend }: Props) {
   }
 
   return (
-    <div>
-      <input
+    <div className="chat-input-container">
+      <input className="chat-input"
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Skriv ett meddelande..."
       />
-      <button type="button" onClick={handleSend}>Skicka</button>
+      <button className="chat-send-button" type="button" onClick={handleSend}>Skicka</button>
     </div>
   );
 }
