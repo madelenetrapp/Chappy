@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { registrationSchema } from "../schemas/registrationSchema.js"; //importerar validering
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
-// importerar kommandot för att spara data i DynamoDB
+import { TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
+// sparar användarprofilen och reserverar användarnamnet i samma transaktion, antingen sparas båda posterna eller ingen, förhindrar att två samtidiga registeringar får samma användarnamn..
 import { dynamoDB } from "../db/dynamoDB.js";
 // återanvänder befintliga databasanslutningen
 import { hashPassword } from "../utilities/password.js";
 // importerar funktionen som hashar lösenord
+import { TransactionCanceledException  } from "@aws-sdk/client-dynamodb";
 
 const authenticationRouter = Router();
 
@@ -38,22 +39,56 @@ authenticationRouter.post("/register", async (request, response) => {
       hashedPassword,
     };
 
-    //Sparar användare i DynamoDB
+    //Sparar användare i DynamoDB om användarnamnet redan finns avbryts hela transaktionen. oavsett stora eller små bokstäver.
     await dynamoDB.send(
-      new PutCommand({
-        TableName: "Chappy",
-        Item: newUser,
-        ConditionExpression: "attribute_not_exists(pk)",
+      new TransactWriteCommand({
+        TransactItems: [
+          {
+            Put: {
+              TableName: "Chappy",
+              Item: newUser,
+              ConditionExpression: "attribute_not_exists(pk)",
+            },
+          },
+          {
+            Put: {
+              TableName: "Chappy",
+              Item: {
+                pk: `USERNAME#${username.toLocaleLowerCase()}`,
+                sk: `RESERVATION`,
+                userId,
+              },
+              ConditionExpression: "attribute_not_exists(pk)",
+            },
+          },
+        ],
       }),
     );
 
+
+  
     //Returneras endast om registreringen lyckades.
     return response.status(201).json({
       message: "Användaren har registrerats",
       userId,
     });
-  } catch {
-    //hanterar fel utan att exponera känslig information.
+
+  } catch (error) {
+    //fångar felet
+    //kontrollerar om dynamodb har avbrutit transaktionen.
+
+    //[1] är den andra operationen i TransactItems, där användarnamnet reserveras 
+    //?. kontrollerar att informationen finns innan den läser
+    // ConditionalCheckFailed = villkoret uppfylls inte - användarnamnet är redan reserverat.    (kontrollerar om registreraingen misslyckas för att användarnamnet redan finns = i så fall får användaren (409) ist för (500))
+    if (
+      error instanceof TransactionCanceledException &&
+      error.CancellationReasons?.[1]?.Code === "ConditionalCheckFailed"
+    ) {
+      return response.status(409).json({
+        error: "Användarnamnet är redan upptaget",
+      });
+    }
+    
     return response.status(500).json({
       error: "Registreringen misslyckades",
     });
