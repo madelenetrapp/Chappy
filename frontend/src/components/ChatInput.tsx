@@ -18,11 +18,12 @@ function ChatInput({ onSend }: Props) {
 
   return (
     <div className="chat-input-container">
-      <input className="chat-input"
-        type="text"
+      <textarea 
+      className="chat-input"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Skriv ett meddelande..."
+        rows={1}
       />
       <button className="chat-send-button" type="button" onClick={handleSend}>Skicka</button>
     </div>

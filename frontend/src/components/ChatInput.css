@@ -37,6 +37,14 @@
 
 /* Skicka-knappens utseende vid hover */
 
+/* Gör att textfälteteväxer på höjden istället för på bredden */
+.chat-input {
+  resize: none;
+  overflow-y: hidden;
+  field-sizing: content;
+  max-height: 200px;
+}
+
 /* låter skrivfältet använda tillgängligt utrymme */
 .chat-input {
   display: flex;

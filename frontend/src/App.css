@@ -64,10 +64,17 @@
 
 /* Placerar meddelandena under varandra */
 
+/* Placerar meddelandena längst ner, ovanför skrivfältet */
+.chat-messages::before {
+  content: "";
+  margin-top: auto;
+}
+
 /* Mellanrum mellan meddelandebubblorna */
 
 /* Gör att äldre meddelanden kan scrollas */
 .chat-messages {
+  flex:1;
   min-height: 0;
   overflow-y: auto;
 }
