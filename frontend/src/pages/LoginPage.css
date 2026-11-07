@@ -1,0 +1,151 @@
+/* Hela inloggningssidan */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(120deg, #d7dde7, #f0f1f4);
+}
+
+/* Mörkblå sidhuvud med logotyp */
+.login-header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: #050b32;
+  padding: 12px 32px;
+  min-height: 60px;
+}
+
+/* logotypens storlek */
+.login-logo {
+  width: 65px;
+  height: auto;
+}
+
+/* centrerar inloggningsformuläret */
+.login-main {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* Vitt kort runt formuläret */
+.login-card {
+  width: 100%;
+  max-width: 315px;
+  padding: 32px 24px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+/* Rubriken Logga in */
+.login-card h1 {
+  margin: 0 0 16px;
+  font-size: 24px;
+  color: #111;
+}
+
+/* Texten under rubriken */
+.login-description {
+  margin-bottom: 24px;
+  font-size: px;
+  font-weight: bold;
+  color: #aca8a8;
+}
+
+/* Ettikett ovanför fälten */
+.login-card label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #111;
+}
+
+/* Fälten för användarnamn och lösenord */
+.login-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Knappen logga in */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #898fa8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+   font-weight: bold;
+   font-size: 15px;
+  cursor: pointer;
+}
+
+/* visuell feedback när knappen används */
+.login-button:hover {
+  background-color: #6f7794;
+}
+
+/* Länk till registrering */
+.register-link {
+  display: block;
+  text-align: center;
+  font-size: 15px;
+  color: #111;
+  text-decoration: none;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* Sidfot */
+.login-footer {
+  padding: 20px;
+  background-color: #172650;
+  color: white;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* Mobil först */
+.login-header {
+  justify-content: center;
+}
+
+.login-main {
+  padding: 24px 16px;
+}
+ .login-card {
+  box-sizing: border-box;
+  max-width: 315px;
+ }
+
+ .login-footer {
+  display: flex;
+  min-width: 100px;
+  justify-content: center;
+  align-content: flex-end;
+  box-sizing: border-box;
+ }
+
+ /* desktop från 768px */
+ @media (min-width: 768px) {
+  .login-header {
+    justify-content: flex-start;
+  }
+
+  .login-main {
+    padding: 40px 20px;
+  }
+
+  .login-footer {
+    display: block;
+    min-height: auto;
+  }
+ }

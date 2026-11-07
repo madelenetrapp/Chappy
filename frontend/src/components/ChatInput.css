@@ -61,3 +61,33 @@
 
 /* Anpassar skrivfältet för mindre skärmar */
 
+/* mobil - tom 767px */
+@media (max-width: 767px) {
+  .chat-input-container {
+    gap: 6px;
+  }
+
+  .chat-input {
+    padding: 10px;
+  }
+
+  .chat-send-button {
+    padding: 10px 12px;
+  }
+}
+
+/* Tablet 768px till 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .chat-input-container {
+    gap:8px
+  }
+}
+
+/* Tablet och laptop */
+@media (min-width: 768px) {
+  .chat-input-container {
+    width: 100%;
+    max-width: 900px;
+    margin-inline: auto;
+  }
+}

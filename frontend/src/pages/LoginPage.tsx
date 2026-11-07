@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "./LoginPage.css";
 
 
 //visa inloggningssidan
@@ -22,7 +23,7 @@ function LoginPage() {
 
     try {
       const { token } = await login(username, password);
-        // Sparar JWT-token under webbläsarsessionen.
+      // Sparar JWT-token under webbläsarsessionen.
       sessionStorage.setItem("token", token);
       // Skickar användaren till chatten.
       navigate("/chat");
@@ -36,30 +37,65 @@ function LoginPage() {
   //kör funktionen när formuläret skickas.
   //e.preventDefault() förhindrar att webbsidan laddas om
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Logga in</h1>
+    <div className="login-page">
 
-      {error && <p role="alert">{error}</p>}
+      {/* Sidhuvud med Chappylogga*/}
+      <header className="login-header">
+        {/*TODO:  logga */}
+      </header>
 
-      <input
-        type="text"
-        placeholder="Användarnamn"
-        value={username}                                                   // visar värdet
-        autoComplete="username"
-        onChange={(e) => setUsername(e.target.value)}                      //e= event, onChange uppdaterar värdet (som skrivs in i inputfältet)
-      />
+      {/* Centrerar formuläret på sidan */}
+      <main className="login-main">
+        <form className="login-card" onSubmit={handleSubmit}>
+          <h1>Logga in</h1>
 
-      <input
-        type="password"
-        placeholder="Lösenord"
-        value={password}                                                     // visar värdet
-        autoComplete="current-password"
-        onChange={(e) => setPassword(e.target.value)}                        //e= event, onChange uppdaterar värdet (som skivs in i inputfältet)
-      />
+          <p className="login-description">
+            Välkommen till din arbetsyta
+          </p>
 
-      <button type="submit"> Logga in </button>
+          {/* Visar felmeddelande vid misslyckad inloggning */}
+          {error && <p className="login-error" role="alert">{error}</p>}
 
-    </form>
+          {/* Användarnamn */}
+          <label htmlFor="username">Användarnamn</label>
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+            required
+          />
+
+          {/* Lösenord */}
+          <label htmlFor="password">Lösenord</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+
+          {/* Skikcar formuläret och anropar handleSubmit */}
+          <button className="login-button" type="submit">
+            Logga in
+          </button>
+
+          {/* Navigerar till registreringssidan */}
+          <Link className="register-link" to="/register">
+            Registrera nytt konto
+          </Link>
+        </form>
+      </main>
+
+      {/* Sidfot */}
+      <footer className="login-footer">
+        Chappy - kommunikation som för oss samman
+      </footer>
+
+    </div >
   );
 }
 

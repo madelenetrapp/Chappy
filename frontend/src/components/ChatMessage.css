@@ -3,7 +3,8 @@
   border: 1px solid #65769d;
   border-radius: 5px;
   padding: 6px 10px;
-  max-width: 75%;
+  max-width: min(75%, 600px);
+box-sizing: border-box;
   min-width: 0;
   width: fit-content;
   overflow-wrap: anywhere;   /*betyder att långa ord eller textsträngar får brytas mitt i ordet om de annars skulle sticka utanför meddelandebubblan.*/
