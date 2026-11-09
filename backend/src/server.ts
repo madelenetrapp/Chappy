@@ -2,6 +2,7 @@ import express from "express"; // Ramverk för backend och API
 import cors from "cors"; // Tillåter anrop från frontend
 import messagesRouter from "./routes/messages.js"; //koppla router till server
 import { authenticationRouter } from "./routes/authentication.js";
+import { chatsRouter } from "./routes/chats.js";
 
 const app = express(); // Skapar Express-servern
 const PORT = Number(process.env.PORT) || 3001; // Port från miljövariabel, annars 3001
@@ -27,7 +28,16 @@ app.get("/api/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+//
+app.use("/api/chats", chatsRouter)
+
 // Startar backend och lyssnar på angiven port
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
 });
+
+
+
+
+
+//POST http://localhost:3001/api/chats/dm
