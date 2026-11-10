@@ -3,13 +3,19 @@ import "./ChatMessage.css"
 
 type Props = {
   message: ChatMassageType;
+  currentUserId: string; //den inloggade användarens ID
 };
 
-function ChatMassage({ message }: Props) {
-  return <p className={`chat-message ${message.sender}`}>
-    {message.text}
+function ChatMassage({ message, currentUserId }: Props) {
+  //Kontrollerar om meddelandet skickades av den inloggade användaren
+  const isOwnMessage = message.senderId === currentUserId;
+
+  return (
+    <p className={`chat-message ${isOwnMessage ? "user" : "other"}`}>
+      {message.text}
     </p>
-};
+  );
+}
 
 export default ChatMassage;
 

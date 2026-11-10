@@ -2,6 +2,7 @@
 
 type LoginResponse = {
   token: string;
+  userId: string;
 };
 
 export async function login(

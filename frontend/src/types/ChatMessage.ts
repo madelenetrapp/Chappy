@@ -1,9 +1,11 @@
 
 
 type ChatMessage = {
-  id: string;
-  text: string;
-  sender: "user" | "ai";
+  id: string;  //meddelandets unika ID
+  chatId: string; // konversationens ID
+  senderId: string; // ID för användaren som skickade meddelandet
+  text: string; //meddelandets innehåll
+  createdAt: string; //tidpunkten då meddelandet skapades
 };
 
 export type { ChatMessage }
@@ -11,5 +13,3 @@ export type { ChatMessage }
 //type ChatMessage – definierar hur ett chattmeddelande ska vara uppbyggt.
 //id: string – ett unikt ID för meddelandet.
 //text: string – meddelandets innehåll.
-//sender: "user" | "ai" – avsändaren måste vara "user" eller "ai".
-//export type { ChatMessage } – gör typen tillgänglig i andra filer.

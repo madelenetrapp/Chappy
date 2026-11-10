@@ -22,8 +22,10 @@ router.post("/:chatId", async (req, res) => {
   // Skapar meddelandet med unikt ID, text och avsändare
   const message = {
     id: crypto.randomUUID(),
-    text: text.trim(),
+    chatId,
     senderId: res.locals.userId,
+    text: text.trim(),
+    createdAt: new Date().toISOString(),
     //innehåller användarens riktiga id (res.locals.userId kommer från jwt som verifierades av requireAuthentication), dynamo sparar vem som fktikt skickar meddelandet
   };
 
@@ -60,7 +62,7 @@ router.post("/:chatId", async (req, res) => {
         TableName: "Chappy", // Databastabellen
         Item: {
           pk: `CHAT#${chatId}`, // Vilken chatt meddelandet tillhör
-          sk: `MESSAGE#${new Date().toISOString()}#${message.id}`, // Sorteringsnyckel med tid och ID
+          sk: `MESSAGE#${message.createdAt}#${message.id}`, // Sorteringsnyckel med tid och ID
           ...message, // Lägger till id, text och senderId
         },
       })
@@ -163,7 +165,7 @@ router.get("/:chatId/metadata", async (req, res) => {
       })
     }
     // Skickar tillbaka metadata
-    return res.status(200).json;
+    return res.status(200).json(chat);
 
   } catch {
     // Returnerar fel om hämtningen misslyckas

@@ -204,12 +204,10 @@ const token = jwt.sign(                           //skapar och signerar token
 //Skickar tillbaka token när inloggningen lyckas
 return response.status(200).json({
   token,                                              // token - innehåller användarens signerade JWT
-})
-
-
+  userId,
 });
 
-
+}); // Avslutar authenticationRouter.post("/login")
 export { authenticationRouter };
 
 // nu: lägger registrering och inloggning i en separat fil i stället för att skriva alla endpoints direkt i server.ts
