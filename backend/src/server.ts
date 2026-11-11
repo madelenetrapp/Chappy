@@ -4,9 +4,16 @@ import cors from "cors"; // Tillåter anrop från frontend
 import messagesRouter from "./routes/messages.js"; //koppla router till server
 import { authenticationRouter } from "./routes/authentication.js";
 import { chatsRouter } from "./routes/chats.js";
+import path from "node:path"; // Hanterar sökvägar till filer och mappar
+import { fileURLToPath } from "node:url"; // Omvandlar filens URL till en vanlig sökväg
 
 const app = express(); // Skapar Express-servern
 const PORT = Number(process.env.PORT) || 3001; // Port från miljövariabel, annars 3001
+
+// Hittar mappen där React-appen byggs
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendPath = path.resolve(__dirname, "../../frontend/dist");
 
 // Tillåter frontend att kommunicera med backend
 app.use(
@@ -33,6 +40,14 @@ app.get("/api/health", (_req, res) => {
 
 //
 app.use("/api/chats", chatsRouter)
+
+// Gör React-appens byggda filer tillgängliga via Express
+app.use(express.static(frontendPath));
+
+// Visar React-appen när användaren besöker en frontend-route
+app.get("/{*path}", (_req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
 
 // Startar backend och lyssnar på angiven port
 app.listen(PORT, () => {
