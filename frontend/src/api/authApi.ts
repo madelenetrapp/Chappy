@@ -12,10 +12,9 @@ export async function login(
 ): Promise<LoginResponse> { // Funktionen returnerar ett Promise med token och userId.
 
   // Skickar en HTTP-förfrågan till backend.
-  const response = await fetch(
-    // Hämtar backend-adressen från miljövariabeln och lägger till endpointen.
-    `${import.meta.env.VITE_API_URL}/api/authentication/login`,
-    {
+const response = await fetch(
+  "/api/authentication/login",
+  {
       method: "POST", // POST används för att skicka inloggningsuppgifter.
 
       // Talar om för backend att informationen skickas som JSON.
@@ -44,10 +43,9 @@ export async function register(
 ): Promise<void> { // Funktionen returnerar inget värde vid lyckad registrering.
 
   // Skickar registreringsuppgifterna till backend.
-  const response = await fetch(
-    // Backend-adressen tillsammans med registreringens endpoint.
-    `${import.meta.env.VITE_API_URL}/api/authentication/register`,
-    {
+const response = await fetch(
+  "/api/authentication/register",
+  {
       method: "POST", // Skickar uppgifterna för att skapa en användare.
 
       // Anger att innehållet är JSON.
