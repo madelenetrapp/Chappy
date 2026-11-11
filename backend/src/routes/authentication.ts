@@ -108,6 +108,7 @@ authenticationRouter.post("/register", async (request, response) => {
     });
 
   } catch (error) {
+    console.error("Registreringsfel:", error);
     //fångar felet
     //kontrollerar om dynamodb har avbrutit transaktionen.
 
