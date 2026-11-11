@@ -25,6 +25,10 @@ box-sizing: border-box;
   background-color: #d9f7fa;
 }
 
+.chat-message.other {
+  background-color: #007bff;
+  color: white;
+}
 
 
 /*  MEDDELANDEBUBBLOR  */

@@ -2,7 +2,7 @@ import "./App.css";
 import { useEffect, useRef, useState } from "react"; // React-hooks
 import { getHealth } from "./api/healthApi.js"; // Kontrollerar backend
 import ChatInput from "./components/ChatInput.js"; // Inmatningsfältet
-import type { ChatMessage } from "./types/ChatMessage.js"; // Typ för meddelanden
+import type { ChatMessage } from "./schemas/chatMessageSchema"; // Typ för meddelanden
 import ChatMessageComponent from "./components/ChatMessage.js"; // Visar meddelanden
 import { getMessages, sendMessage } from "./api/messagesApi.js"; // API-funktioner
 import { createDM } from "./api/chatsApi.js"
@@ -41,6 +41,7 @@ function App() {
       //anropar backend för att skapa eller öppna en DM med mottagare
       const chat = await createDM(recipient, token);
       setChatId(chat.chatId);                                                     //sparar ID för den skapade eller öppna chatten
+      console.log("DM öppnad", chat.chatId);
       setMessages([]);                                                            // tömmer tidigare meddelanden när användaren byter chatt
     } catch (error) {
       console.error("Kunde inte öppna DM:", error);
@@ -76,18 +77,9 @@ function App() {
     try {
       const savedMessages = await getMessages(chatId, token);
 
-      //filterar bort data som inte har rätt struktur
-      const validMessages = savedMessages.filter(
-        (messages) =>
-          typeof messages.id === "string" &&
-        typeof messages.text === "string" &&
-          typeof messages.senderId === "string" &&
-          typeof messages.chatId === "string" &&
-          typeof messages.createdAt === "string"
-      );
 
-      //sparar meddelandena i react state.
-      setMessages(validMessages);
+      //sparar meddelandena i react state. //TODO: tala om datatyp
+      setMessages(savedMessages);
     } catch (error) {
       console.error("Kunde inte hmta meddelanden:", error);
     }

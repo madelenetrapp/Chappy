@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// import { ChatMessage } from "./types/ChatMessage";
+// import { ChatMessage } from "./../schemas/chatMessageSchema";
 import "./ChatInput.css"
 
 type Props = {

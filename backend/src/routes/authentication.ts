@@ -66,6 +66,7 @@ authenticationRouter.post("/register", async (request, response) => {
       new TransactWriteCommand({
         TransactItems: [
           {
+            //spara användarnamnet
             Put: {
               TableName: "Chappy",
               Item: newUser,
@@ -74,6 +75,7 @@ authenticationRouter.post("/register", async (request, response) => {
           },
           {
             Put: {
+              //reservera användarnamnet
               TableName: "Chappy",
               Item: {
                 pk: `USERNAME#${username.toLowerCase()}`,

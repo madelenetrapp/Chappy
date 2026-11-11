@@ -4,7 +4,7 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { routerConfig } from "./routes.js";
 
-// Skapar routern utifrån sidorna i routes.tsx
+// Skapar routern utifrån sidorna i routes.tsx  -- definierar vilka sidor som finns --  navigerar mellan sidorna i forntend utan att hela webbsidan laddas om
 const config = createBrowserRouter(routerConfig);
 
 createRoot(document.getElementById('root')!).render(
@@ -12,3 +12,4 @@ createRoot(document.getElementById('root')!).render(
     <RouterProvider router={config} />
   </StrictMode>,
 )
+// gör att nav funkar och rätt sida visas

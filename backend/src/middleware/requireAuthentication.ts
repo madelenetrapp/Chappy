@@ -33,7 +33,7 @@ const requireAuthentication: RequestHandler = (req, res, next) => {
     //algorithms: ["HS256"] – tillåter endast signeringsalgoritmen HS256
     //decoded – innehåller informationen från den verifierade token
     const decoded = jwt.verify(token, JWT_SECRET, {
-      algorithms: ["HS256"],
+      algorithms: ["HS256"],                                  //TODO: behövs anges?
     });
 
     if (typeof decoded === "string" || typeof decoded.userId !== "string") {

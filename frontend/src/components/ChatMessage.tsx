@@ -1,4 +1,4 @@
-import type { ChatMessage as ChatMassageType } from "../types/ChatMessage";
+import type { ChatMessage as ChatMassageType } from "../schemas/chatMessageSchema";
 import "./ChatMessage.css"
 
 type Props = {

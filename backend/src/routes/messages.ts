@@ -103,8 +103,8 @@ router.get("/:chatId", async (req, res) => {
 
     //kontrollerar att användaren tillhör chatten.
     if (
-      !Array.isArray(chat.members) ||
-      !chat.members.includes(res.locals.userId)
+      !Array.isArray(chat.members) ||         //kontrollerar om värdet är en array eller
+      !chat.members.includes(res.locals.userId)         //kontrollerar om ett värde finns i arrayen
     ) {
       return res.status(403).json({
         error: "Ingen behörighet till chatten",

@@ -21,3 +21,4 @@ async function createDM(username: string, token: string): Promise<{chatId: strin
 export { createDM }
 
 
+//Bearer = den som har en giltig token kan använda den för att identifiera sig

@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-// Kontrollerar om användaren har en sparad token.
+// Kontrollerar om användaren har en sparad token.  //TODO: localstarage
 function ProtectedRoute() {
   const token = sessionStorage.getItem("token");
 
