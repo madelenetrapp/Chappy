@@ -1,7 +1,10 @@
+import { chatSchema } from "../schemas/chatSchema";
+import type { Chat } from "../schemas/chatSchema";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 //skapar en DM eller hämtar en befintlig konversation
-async function createDM(username: string, token: string): Promise<{chatId: string}> {
+async function createDM(username: string, token: string): Promise<Chat> {
   const response = await fetch(`${API_URL}/api/chats/dm`, {
     method: "POST",
     headers: {
@@ -15,7 +18,17 @@ async function createDM(username: string, token: string): Promise<{chatId: strin
     throw new Error("Kunde inte öppna konversationen");
   }
 
-  return response.json();
+  //hämtar JSON-svaret från backend
+  const data: unknown = await response.json();
+
+  //validerar svaret mot Zod-schemat
+  const result = chatSchema.safeParse(data);
+
+  if (!result.success) {
+    throw new Error("Ogiltig chattdata från backend")
+  }
+
+  return result.data;
 }
 
 export { createDM }
