@@ -1,170 +1,579 @@
-.chat-content {
+/* hela sidan */
+.chat-layout {
+
+  background-color: #f5f6f8;
+  font-family: Arial, sans-serif;
+  color: #162451;
+  min-height: 100dvh;
+}
+
+/* header */
+
+/* örkblå header med rubrik */
+.chat-header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: #050c34;
+  color: white;
+  height: 80px;
+  padding: 0 32px;
+
+
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* Döljer mobilknapparna på desktop */
+.mobile-nav {
+  display: none;
+}
+
+/* layout */
+
+/* Tre kolumner som fyller skärmens bredd */
+.chat-main {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) 230px;
+  box-sizing: border-box;
+  background: linear-gradient(110deg,
+      #f3f5f8 0%,
+      #dce3ed 55%,
+      #f5f6f8 100%);
+  gap: 0;
+  width: 100%;
+  min-height: calc(100dvh - 80px);
+  height: auto;
+  max-width: none;
+  margin: 0;
+  padding: 4px;
+
+
+}
+
+/* vänster panel */
+
+/* Mörkblå panel */
+.chat-sidebar {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  box-sizing: border-box;
+  background-color: #162451;
+  border-radius: 5px;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 26px 9px 12px;
+
+}
+
+/* Vit containrar för chattar och kontakter */
+.sidebar-section {
+  width: 100%;
+  padding: 11px;
+  box-sizing: border-box;
+  background-color: #f5f6f8;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+/* Utfälld del */
+.sidebar-section.expanded {
   width: 100%;
 }
 
+/* Infälld del */
+.sidebar-section.collapsed {
+  width: 44px;
+  padding: 4px;
+}
+
+/* Döljer rubriken när delen är infälld */
+.sidebar-section.collapsed .sidebar-toggle span {
+  display: none;
+}
+
+/* knappar och pilar */
+
+/* Rubrikknappar */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: left;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #162451;
+
+  cursor: pointer;
+}
+
+/* Pilarnas storlek */
+.sidebar-arrow {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 2px solid #162451;
+  outline-offset: 4px;
+}
+
+/* listor och kontakter */
+
+/* Scrollbara listor. */
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  padding-right: 5px;
+  overflow-y: auto;
+  max-height: 180px;
+  margin-top: 12px;
+  min-width: 0;
+  gap: 6px;
+}
+
+/* Chatt och kontaktrader */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #192752;
+  border-radius: 8px;
+  color: #000000;
+  font-size: 9px;
+  text-align: left;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
+  min-height: 20px;
+  padding: 3px 6px;
+}
+
+/* Grön markerad rad */
+.sidebar-item.active {
+  background-color: #39f000;
+  border-color: #192752;
+}
+
+/* Kontaktens ikon och namn */
+.contact-item {
+  gap: 5px;
+}
+
+/* Kontaktikon */
+.contact-icon {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+
+}
+
+/* Förhindrar att långa namn förstör layouten */
+.contact-name {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* scrollbar */
+.sidebar-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Scrollbarens handtag */
+.sidebar-list::-webkit-scrollbar-thumb {
+  background-color: #8b9bbd;
+  border-radius: 5px;
+}
+
+/* Scrollbarens bakgrund */
+.sidebar-list::-webkit-scrollbar-track {
+  background-color: #e6eaf1;
+}
+
+/* Inmatningsfält för användarnamn */
+.sidebar-list input[type="text"] {
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #192752;
+  border-radius: 8px;
+  font-size: 9px;
+  width: 100%;
+  min-width: 0;
+  min-height: 20px;
+  padding: 3px 6px;
+}
+
+/* Starta DM-knappen */
+.sidebar-list>button:not(.sidebar-item) {
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #192752;
+  border: 1px solid #192752;
+  border-radius: 8px;
+  font-size: 9px;
+  text-align: center;
+  width: 100%;
+  min-height: 20px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+
+/* Hover */
+.sidebar-list>button:not(.sidebar-item):hover {
+  background-color: #d0f8f8;
+}
+
+.sidebar-item:focus-visible {
+  outline: 2px solid #162451;
+  outline-offset: 2px;
+}
+
+/* chatt */
+
+/* Mittenkolumnen */
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 20px;
+
+}
+
+/* Meddelandelistan */
 .chat-messages {
   display: flex;
   flex-direction: column;
   gap: 12px;
   flex: 1;
-}
-
-
-
-/*  HEADER  */
-
-/* Sidans översta område med logotyp */
-
-/* Logotypens storlek och placering */
-
-
-
-
-/*  HUVUDLAYOUT  */
-
-/* Delar upp sidan i vänster sidopanel, chatt och höger sidopanel */
-
-/* Mellanrum mellan sidans olika sektioner */
-
-
-
-
-/*  VÄNSTER SIDOPANEL  */
-
-/* Sidopanelens bakgrund, bredd och höjd */
-
-/* Sektionen för tidigare chattar */
-
-/* Utseende på listan med tidigare chattar */
-
-/* Markerar den aktiva chatten */
-
-/* Sektionen för kontakter */
-
-/* Utseende på kontaktlistan */
-
-/* Markerar den valda kontakten */
-
-/* Scrollning när listorna blir för långa */
-
-
-
-
-/*  CHATTOMRÅDE  */
-
-/* Chattområdets storlek och placering */
-
-/* Bakgrund för hela chattområdet */
-/* Chattområdet – centrerat och responsivt */
-.chat-content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 900px;
-  min-width: 0;
-  height: 80vh;
-  margin-inline: auto;
   box-sizing: border-box;
-  background-color: #f3f6fa;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  min-width: 0;
+  padding: 20px 8px;
 }
 
-/* Placerar meddelandena under varandra */
-
-/* Placerar meddelandena längst ner, ovanför skrivfältet */
+/* Placerar meddelandena längst ner */
 .chat-messages::before {
   content: "";
   margin-top: auto;
 }
 
-/* Mellanrum mellan meddelandebubblorna */
-
-/* Gör att äldre meddelanden kan scrollas */
-.chat-messages {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  padding: 12px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/* Ger skrivfältet lite utrymme från meddelandena */
+/* Området för skrivfält och skicka-knapp */
 .chat-input-area {
   width: 100%;
   min-width: 0;
-  padding: 16px;
+  padding: 12px 8px 18px;
   box-sizing: border-box;
 }
 
+/* höger panel */
 
-/*  HÖGER SIDOPANEL  */
+/* ljusgrå panel */
+.chat-settings {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 10px;
+  box-sizing: border-box;
+  background-color: #f5f6f8;
+  border-radius: 5px;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
 
-/* Språkinställningarnas bakgrund, bredd och höjd */
+/* språkinställningar */
 
-/* Rubriken för språkinställningar */
+/* Ljusblå container */
+.settings-section {
+  box-sizing: border-box;
+  background-color: #d0f8f8;
+  border: 1px solid #7596ae;
+  border-radius: 5px;
+  width: 100%;
+  padding: 12px;
+}
 
-/* Utseende på listan med språk */
+/* Rubriken */
+.settings-section .sidebar-toggle {
+  font-size: 10px;
+  font-weight: 600;
+}
 
-/* Utseende på språkvalens alternativ */
+/* Språkvalen under varandra */
+.language-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
 
-/* Markerar det valda språket */
+/* Varje språkval */
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
 
+/* Rund markering */
+.language-option input {
+  width: 11px;
+  height: 11px;
+  margin: 0;
+  accent-color: #162451;
+  flex-shrink: 0;
+}
 
+/* Vitt rundat fält */
+.language-option span {
+  display: block;
+  flex: 1;
+  box-sizing: border-box;
+  background-color: white;
+  color: #162451;
+  border-radius: 20px;
+  font-size: 9px;
 
+  min-width: 0;
+  padding: 4px 8px;
+}
 
+/* overlay */
 
-/* RESPONSIV DESIGN */
+/* Döljer overlay på desktop */
+.mobile-overlay {
+  display: none;
+}
 
-/* Mobil: upp till 767px */
-@media (max-width: 767px) {
+.mobile-overlay-close img {
+  display: block;
+  width: 16px;
+  height: 16px;
+
+}
+
+/* mobil och tablet */
+
+@media (max-width: 1023px) {
+
+  /* Header med rubrik och tre knappar */
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    height: 90px;
+    padding: 12px;
+  }
+
+  /* Mindre rubrik */
+  .chat-header h1 {
+    font-size: 20px;
+  }
+
+  /* Tre knappar till höger */
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Utseende på headerknapparna. */
+  .mobile-nav button {
+    background-color: #ffffff;
+    color: #162451;
+    font-size: 10px;
+    padding: 7px 8px;
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
+  }
+
+  /* Markerar den öppna overlayen */
+  .mobile-nav button.active {
+    background-color: #39f000;
+  }
+
+  /* Döljer desktopversionens sidopaneler */
+  .chat-sidebar,
+  .chat-settings {
+    display: none;
+  }
+
+  /* Chatten visas i en enda kolumn. */
+  .chat-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-height: calc(100dvh - 90px);
+    padding: 0;
+  }
+
+  /* Chattområdet fyller bredden */
   .chat-content {
     width: 100%;
-    height: 75vh;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
   }
 
-  .chat-messages {
-    padding: 8px;
-  }
-
+  /* Mörkblå nederdel */
   .chat-input-area {
-    padding: 8px;
+    background-color: #162451;
+    padding: 16px;
+  }
+
+  /* placerar textfält och knapp under varandra */
+  .chat-input-area form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Textfältet fyller bredden */
+  .chat-input-area input,
+  .chat-input-area textarea {
+
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* Skicka-knappen under textfältet */
+  .chat-input-area form button {
+    background-color: #ffffff;
+    color: #162451;
+    border-radius: 5px;
+    width: 100%;
+  }
+
+  /* Overlay ovanpå chattområdet */
+  .mobile-overlay {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 90px;
+    left: 0;
+    z-index: 20;
+    box-sizing: border-box;
+    background-color: rgba(245, 246, 248, 0.97);
+    width: 100%;
+    min-height: calc(100dvh - 90px);
+    padding: 20px 16px 120px;
+
+  }
+
+  /* Vit container enligt Figma */
+  .mobile-overlay-card {
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 350px;
+    min-height: 300px;
+    height: fit-content;
+    padding: 20px;
+  }
+
+  /* Chatt och kontakteri overlay */
+  .mobile-overlay-card .sidebar-section {
+    width: 100%;
+  }
+
+  /* Språk i overlay */
+  .mobile-overlay-card .settings-section {
+    width: 100%;
+  }
+
+  /* Rubriker i overlay */
+  .mobile-overlay-card h2 {
+    font-size: 12px;
+    color: #162451;
+    margin: 0 0 12px;
+  }
+
+  /* Stängknapp */
+  .mobile-overlay-close {
+    position: absolute;
+    background: transparent;
+    color: #162451;
+    font-size: 24px;
+    top: 8px;
+    right: 12px;
+    border: none;
+    cursor: pointer;
   }
 }
 
-/* Tablet: 768px till 1023px */
+/* *Tablet */
+
 @media (min-width: 768px) and (max-width: 1023px) {
-  .chat-content {
-    height: 80vh;
-  }
 
-  .chat-input-area {
-    padding: 12px;
+  /* Lite extra utrymme i chatten */
+  .chat-content {
+    padding: 0 10px;
   }
 }
 
-/* Desktop: från 1024px */
-@media (min-width: 1024px) {
-  .chat-content {
-    height: 80vh;
-  }
-}
+/* mobil */
 
-/* Mobil – upp till 767px */
 @media (max-width: 767px) {
-  .chat-content {
-    width: 100%;
-    height: 100dvh;
-    max-width: none;
+
+  /* Chatten fyller mobilens bredd */
+  .chat-main {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .chat-input-area {
-    padding: 12px;
+  /* headern för mindre skärmar */
+  .chat-header {
+    padding: 10px;
+  }
+
+  /* Mindre mellanrum mellan knapparna */
+  .mobile-nav {
+    gap: 4px;
+  }
+
+  /* Mindre knappar på mobil */
+  .mobile-nav button {
+    font-size: 9px;
+    padding: 6px;
+  }
+
+  /* Chattområdet fyller tillgänglig höjd */
+  .chat-content {
+    min-height: calc(100dvh - 90px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-section {
+    transition: none;
   }
 }
