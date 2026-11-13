@@ -6,6 +6,7 @@ import { authenticationRouter } from "./routes/authentication.js";
 import { chatsRouter } from "./routes/chats.js";
 import path from "node:path"; // Hanterar sökvägar till filer och mappar
 import { fileURLToPath } from "node:url"; // Omvandlar filens URL till en vanlig sökväg
+import { usersRouter } from "./routes/users.js";
 
 const app = express(); // Skapar Express-servern
 const PORT = Number(process.env.PORT) || 3001; // Port från miljövariabel, annars 3001
@@ -41,6 +42,9 @@ app.get("/api/health", (_req, res) => {
 //
 app.use("/api/chats", chatsRouter)
 
+//kopplar användarroutern till API:et så att alla registrerade användare kan hämtas
+app.use("/api/users", usersRouter)
+
 // Gör React-appens byggda filer tillgängliga via Express
 app.use(express.static(frontendPath));
 
@@ -56,6 +60,3 @@ app.listen(PORT, () => {
 
 
 
-
-
-//POST http://localhost:3001/api/chats/dm
