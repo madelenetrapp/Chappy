@@ -3,12 +3,15 @@ import { useEffect, useRef, useState } from "react";
 // API-funktioner
 import { getHealth } from "./api/healthApi.js";
 import { getMessages, sendMessage } from "./api/messagesApi.js";
-import { createDM } from "./api/chatsApi.js";
+import { createDM, getChats } from "./api/chatsApi.js";
+import type { ChatListItem } from "./api/chatsApi.js";
 // Komponenter
 import ChatInput from "./components/ChatInput.js";
 import ChatMessageComponent from "./components/ChatMessage.js";
 // Typ för chattmeddelanden
 import type { ChatMessage } from "./schemas/chatMessageSchema";
+import { getUsers } from "./api/usersApi.js";
+import type { User } from "./api/usersApi.js";
 // Pilar för att öppna och stänga 
 import leftArrow from "./assets/left-arrow.svg";
 import rightArrow from "./assets/right-arrow.svg";
@@ -28,13 +31,13 @@ const exampleChats: string[] = [
 ];
 
 // Exempelkontakter från Figma TODO
-const exampleContacts: string[] = [
-  "Anna Lindberg – Skadereglerare",
-  "Erik Johansson – Försäkringsrådgivare",
-  "Sara Ahmed – Kundansvarig",
-  "Johan Bergström – Skadehandläggare",
-  "Emma Karlsson – Teamledare",
-];
+// const exampleContacts: string[] = [
+//   "Anna Lindberg – Skadereglerare",
+//   "Erik Johansson – Försäkringsrådgivare",
+//   "Sara Ahmed – Kundansvarig",
+//   "Johan Bergström – Skadehandläggare",
+//   "Emma Karlsson – Teamledare",
+// ];
 
 // Språkval - Figma
 const languages: string[] = [
@@ -47,17 +50,23 @@ const languages: string[] = [
 
 function App() {
   // Hämtar JWT och användar-ID från sessionStorage  TODO: använd inte session storage //local
-  const token = sessionStorage.getItem("token");
-  const currentUserId = sessionStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  const currentUserId = localStorage.getItem("userId");
 
   // Sparar den valda konversationens ID
   const [chatId, setChatId] = useState<string | null>(null);
+
+  //sparar användarens konversationer från dynamoDB
+  const [chats, setChats] = useState<ChatListItem[]>([]);
 
   // Sparar användarnamnet för en ny DM
   const [recipient, setRecipient] = useState<string>("");
 
   // Sparar meddelandena i den aktuella chatten
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  //sparar registrerade användare från dynamoDB
+  const [users, setUsers] = useState<User[]>([]);
 
   // Styr vilka sektioner som visas på desktop
   const [showChats, setShowChats] = useState<boolean>(true);
@@ -90,6 +99,15 @@ function App() {
     setMobileOverlay((current) =>
       current === overlay ? null : overlay
     );
+  }
+
+  //loggar ut användaren
+  function handleLogout(): void {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+
+    //laddar om appen utan inloggning
+    window.location.reload();
   }
 
   // Skapar eller öppnar en DM med angiven användare
@@ -164,6 +182,37 @@ function App() {
     void checkBackend();
   }, []);
 
+  //hämtar registrerade användare när sidan öppnas
+  useEffect(() => {
+    async function loadUsers(): Promise<void> {
+      try {
+        const data = await getUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Kunde inte hämta användare:", error);
+      }
+    }
+
+    void loadUsers();
+  }, []);
+  //när app öppnas anropas getUsers(), backend hämtar användarna från backend, setUsers(data) sparar användarna i react state
+
+  //hämtar den inloggade användarens sparade konversationer
+  useEffect(() => {
+    if (!token) return;
+
+    async function loadChats(): Promise<void> {
+      try {
+        const data = await getChats(token!);
+        setChats(data);
+      } catch (error) {
+        console.error("Kunde inte hämta chattar:", error);
+      }
+    }
+
+    void loadChats();
+  }, [token]);
+
   // Hämtar meddelanden när användaren byter chatt
   useEffect(() => {
     void loadMessages();
@@ -177,21 +226,25 @@ function App() {
       messageRef.current.scrollHeight;
   }, [messages]);
 
-
-  // Visar chattlistan och markerar vald chatt
+ 
+  // Visar användarens sparade konversationer
   function renderChats() {
     return (
       <div className="sidebar-list">
-        {exampleChats.map((chat) => (
+        {chats.map((chat) => (
           <button
-            key={chat}
+            key={chat.chatId}
             type="button"
-            className={`sidebar-item ${selectedChat === chat ? "active" : ""
-              }`}
-            aria-pressed={selectedChat === chat}
-            onClick={() => setSelectedChat(chat)}
+            className={`sidebar-item ${
+              chatId === chat.chatId ? "active" : ""
+            }`}
+            aria-pressed={chatId === chat.chatId}
+            onClick={() => {
+              setChatId(chat.chatId);
+              setMessages([]);
+            }}
           >
-            {chat}
+            {chat.chatId}
           </button>
         ))}
       </div>
@@ -202,20 +255,19 @@ function App() {
   // Återanvändbar kontaktlista med DM-funktion
   function renderContacts() {
     return (
-      <div className="sidebar-list">
-        {exampleContacts.map((contact) => (
+      <div className="sidebar-list contacts-container">
+        <div className="contacts-scroll">
+        {users.map((user) => (
           <button
-            key={contact}
+            key={user.userId}
             type="button"
-            className={`sidebar-item contact-item ${selectedContact === contact ? "active" : ""
+            className={`sidebar-item contact-item ${selectedContact === user.username ? "active" : ""
               }`}
-            aria-pressed={selectedContact === contact}
+            aria-pressed={selectedContact === user.username}
             onClick={() => {
-              // Markerar kontakten
-              setSelectedContact(contact);
-
-              // Fyller i namnet i DM-fältet - börjar från början
-              setRecipient(contact.split(" – ")[0]);
+              // Markerar kontakten och fyller i användarnamnet
+              setSelectedContact(user.username);
+              setRecipient(user.username);
             }}
           >
             {/* Kontaktikon */}
@@ -227,11 +279,12 @@ function App() {
             />
 
             <span className="contact-name">
-              {contact}
+              {user.username}
             </span>
 
           </button>
         ))}
+        </div>
 
         {/* funktion för att starta DM */}
         <input
@@ -285,7 +338,7 @@ function App() {
 
       {/* header */}
       <header className="chat-header">
-        <h1>Chappy</h1>
+        
 
         {/* Tre knappar för mobil och tablett */}
         <nav
@@ -332,6 +385,15 @@ function App() {
             Språk
           </button>
         </nav>
+<h1>Chappy</h1>
+        
+        <button
+        type="button"
+        onClick={handleLogout}
+        >
+          Logga ut
+        </button>
+
       </header>
 
       {/* mobil-tablet layout */}

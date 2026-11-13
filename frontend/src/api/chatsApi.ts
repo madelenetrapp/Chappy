@@ -31,7 +31,28 @@ async function createDM(username: string, token: string): Promise<Chat> {
   return result.data;
 }
 
-export { createDM }
+type ChatListItem = {
+  chatId: string;
+  type: string;
+};
+
+//hämtar den inloggade användarens konversationer
+async function getChats(token: string): Promise<ChatListItem[]> {
+  const response = await fetch(`${API_URL}/api/chats`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Kunde inte hämta chattar");
+  }
+
+  return response.json();
+}
+
+export { createDM, getChats };
+export type { ChatListItem }
 
 
 //Bearer = den som har en giltig token kan använda den för att identifiera sig

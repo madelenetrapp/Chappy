@@ -16,7 +16,7 @@
   box-sizing: border-box;
   background-color: #050c34;
   color: white;
-  height: 80px;
+  height: 120px;
   padding: 0 32px;
 
 
@@ -171,6 +171,20 @@
   border-color: #192752;
 }
 
+/* Kontaktlista med separat scrollning */
+.contact-container {
+  overflow: hidden;
+}
+
+.contacts-scroll {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 150px;
+  padding-right: 5px;
+  gap: 6px;
+}
+
 /* Kontaktens ikon och namn */
 .contact-item {
   gap: 5px;
@@ -248,6 +262,48 @@
 }
 
 /* chatt */
+
+/* chatt header */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  width: 85px;
+  margin-right: auto;
+}
+
+.mobile-nav button {
+  width: 100%;
+  text-align: center;
+  background-color: #ffffff;
+  color: #162451;
+  font-size: 10px;
+  padding: 7px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+/* Logga ut-knappen */
+.chat-header > button {
+  margin-left: auto;
+  background-color: #ffffff;
+  color: #162451;
+  font-size: 10px;
+  padding: 7px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 /* Mittenkolumnen */
 .chat-content {
@@ -388,7 +444,7 @@
     align-items: center;
     justify-content: space-between;
     position: relative;
-    height: 90px;
+    height: 120px;
     padding: 12px;
   }
 
@@ -576,4 +632,28 @@
   .sidebar-section {
     transition: none;
   }
+}
+
+/* Desktop – knappar på rad */
+@media (min-width: 1024px) {
+  .mobile-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    gap: 8px;
+  }
+
+  .mobile-nav button {
+    width: auto;
+  }
+
+  .chat-header {
+  height: 80px;
+}
+
+/* Chattområdet fyller skärmens höjd, förutom platsen som headern tar upp */
+.chat-main {
+  min-height: calc(100dvh - 80px);
+}
 }
