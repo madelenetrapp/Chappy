@@ -7,6 +7,7 @@ import { chatsRouter } from "./routes/chats.js";
 import path from "node:path"; // Hanterar sökvägar till filer och mappar
 import { fileURLToPath } from "node:url"; // Omvandlar filens URL till en vanlig sökväg
 import { usersRouter } from "./routes/users.js";
+import { channelsRouter } from "./routes/channels.js";// Importerar routern som hanterar kanaler.
 
 const app = express(); // Skapar Express-servern
 const PORT = Number(process.env.PORT) || 3001; // Port från miljövariabel, annars 3001
@@ -32,6 +33,9 @@ app.use("/api/authentication", authenticationRouter)
 
 //kopplar meddelandet routern till API:et
 app.use("/api/messages", messagesRouter)
+
+// gör kanalerna tillgängliga 
+app.use("/api/channels", channelsRouter);
 
 //Endpoint
 // GET: Kontrollerar att backend fungerar
