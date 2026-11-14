@@ -13,6 +13,7 @@ import { dynamoDB } from "../db/dynamoDB.js"; // Importerar vår konfigurerade D
 import { requireAuthentication } from "../middleware/requireAuthentication.js"; // Kontrollerar användarens JWT-token.
 import type { Chat } from "../types/Chat.js"; // TypeScript-typ som beskriver en konversation.
 
+
 // chats.ts ansvarar för att skapa och hämta konversationer.
 // messages.ts ansvarar för att skicka, spara och hämta meddelanden.
 

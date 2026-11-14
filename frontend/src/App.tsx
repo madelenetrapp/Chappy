@@ -147,7 +147,7 @@ console.log("Mottagare:", recipient);
   // Skickar ett meddelande till den aktuella chatten
   async function handleSend(text: string): Promise<void> {
     // Avbryter om JWT eller vald chatt saknas
-    if (!token || !chatId) return;
+    if (!chatId) return;
 
     try {
       // Skickar meddelandet till backend
@@ -166,7 +166,7 @@ console.log("Mottagare:", recipient);
   // Hämtar meddelanden för den aktuella chatten
   async function loadMessages(): Promise<void> {
     // Avbryter om JWT eller chatt-ID saknas
-    if (!token || !chatId) return;
+    if (!chatId) return;
 
     try {
       // Hämtar sparade meddelanden från backend

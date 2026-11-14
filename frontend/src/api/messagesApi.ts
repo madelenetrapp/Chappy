@@ -6,12 +6,12 @@ import type { ChatMessage } from "../schemas/chatMessageSchema";
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Skickar ett meddelande till backend.
-async function sendMessage(chatId: string, text: string, token: string): Promise<ChatMessage> {
+async function sendMessage(chatId: string, text: string, token: string | null): Promise<ChatMessage> {
   const response = await fetch(`${API_URL}/api/messages/${chatId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify({ text }),
   });
@@ -35,10 +35,10 @@ async function sendMessage(chatId: string, text: string, token: string): Promise
 }
 
 // Hämtar meddelanden från en specifik chatt.
-async function getMessages(chatId: string, token: string): Promise<ChatMessage[]> {
+async function getMessages(chatId: string, token: string | null): Promise<ChatMessage[]> {
   const response = await fetch(`${API_URL}/api/messages/${chatId}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 
@@ -56,7 +56,7 @@ async function getMessages(chatId: string, token: string): Promise<ChatMessage[]
   if (!result.success) {
     throw new Error("Ogiltig chatthistorik från backend");
   }
-    return result.data;
+  return result.data;
 }
 
 export { sendMessage, getMessages };

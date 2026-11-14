@@ -1,13 +1,13 @@
 import express, { type Router } from "express";
 import { GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb"; // Kommandon för att spara och hämta data
 import { dynamoDB } from "../db/dynamoDB.js";  // Databasanslutningen
-import { requireAuthentication } from "../middleware/requireAuthentication.js"
+import { optionalAuthentication } from "../middleware/optionalAuthentication.js";
 
 //skapar en separat router för meddelandena
 const router: Router = express.Router();
 
-//kräver giltig JWT för alla endpoints i denna router
-router.use(requireAuthentication);
+// Tillåter gäster utan JWT och verifierar JWT för inloggade användare
+router.use(optionalAuthentication);
 
 // POST: Tar emot och sparar ett nytt meddelande
 router.post("/:chatId", async (req, res) => {
@@ -23,7 +23,7 @@ router.post("/:chatId", async (req, res) => {
   const message = {
     id: crypto.randomUUID(),
     chatId,
-    senderId: res.locals.userId,
+    senderId: res.locals.userId ?? "guest",
     text: text.trim(),
     createdAt: new Date().toISOString(),
     //innehåller användarens riktiga id (res.locals.userId kommer från jwt som verifierades av requireAuthentication), dynamo sparar vem som fktikt skickar meddelandet
@@ -48,13 +48,21 @@ router.post("/:chatId", async (req, res) => {
       return res.status(404).json({ error: "Chatten finns inte" });
     }
 
-    // Kontrollerar att members är en array OCH att användarens ID finns i den
-    // Om något av kraven inte uppfylls nekas användaren åtkomst
-    if (
-      !Array.isArray(chat.members) ||
-      !chat.members.includes(res.locals.userId)
-    ) {
-      return res.status(403).json({ error: "Ingen behörighet till chatten" })
+    // DM: endast deltagare får skriva
+    // Låst kanal: endast inloggade får skriva
+    // Öppen kanal: även gäster får skriva
+    const allowed =
+      chat.type === "channel"
+        ? chat.locked === false || Boolean(res.locals.userId)
+        : chat.type === "dm" &&
+        Boolean(res.locals.userId) &&
+        Array.isArray(chat.members) &&
+        chat.members.includes(res.locals.userId);
+
+    if (!allowed) {
+      return res.status(403).json({
+        error: "Ingen behörighet till chatten",
+      });
     }
 
     await dynamoDB.send(
@@ -97,15 +105,23 @@ router.get("/:chatId", async (req, res) => {
     //Kontrollerar att chatten finns
     const chat = chatResult.Item;
 
+    // Kontrollerar att chatten finns innan behörigheten kontrolleras
     if (!chat) {
       return res.status(404).json({ error: "Chatten finns inte" });
     }
 
-    //kontrollerar att användaren tillhör chatten.
-    if (
-      !Array.isArray(chat.members) ||         //kontrollerar om värdet är en array eller
-      !chat.members.includes(res.locals.userId)         //kontrollerar om ett värde finns i arrayen
-    ) {
+    // Öppen kanal: alla får läsa
+    // Låst kanal: endast inloggade får läsa
+    // DM: endast deltagare får läsa
+    const allowed =
+      chat.type === "channel"
+        ? chat.locked === false || Boolean(res.locals.userId)
+        : chat.type === "dm" &&
+        Boolean(res.locals.userId) &&
+        Array.isArray(chat.members) &&
+        chat.members.includes(res.locals.userId);
+
+    if (!allowed) {
       return res.status(403).json({
         error: "Ingen behörighet till chatten",
       });
@@ -155,20 +171,27 @@ router.get("/:chatId/metadata", async (req, res) => {
       return res.status(404).json({ error: "Chatten finns inte" });
     }
 
-    //Kontrollerar att användaren är deltagare i chatten
-    if (
-      !Array.isArray(chat.members) ||
-      !chat.members.includes(res.locals.userId)
-    ) {
+    // Öppen kanal: alla får läsa metadata
+    // Låst kanal: endast inloggade
+    // DM: endast deltagare
+    const allowed =
+      chat.type === "channel"
+        ? chat.locked === false || Boolean(res.locals.userId)
+        : chat.type === "dm" &&
+        Boolean(res.locals.userId) &&
+        Array.isArray(chat.members) &&
+        chat.members.includes(res.locals.userId);
+
+    if (!allowed) {
       return res.status(403).json({
-        error: "Ingen behörighet till chatten"
-      })
+        error: "Ingen behörighet till chatten",
+      });
     }
-    // Skickar tillbaka metadata
+
+    // Skickar tillbaka chattens metadata
     return res.status(200).json(chat);
 
   } catch {
-    // Returnerar fel om hämtningen misslyckas
     return res.status(500).json({
       error: "Kunde inte hämta chattens metadata",
     });
@@ -176,4 +199,12 @@ router.get("/:chatId/metadata", async (req, res) => {
 });
 
 
+
 export default router;
+
+
+// Funktion	  -     Öppen kanal    - Låst kanal	   - DM
+// Gäst kan läsa	      Ja	            Nej	         Nej
+// Gäst kan skriva	    Ja	            Nej	         Nej
+// Inloggad kan läsa	  Ja	            Ja	         Endast deltagare
+// Inloggad kan skriva	Ja	            Ja	         Endast deltagare
