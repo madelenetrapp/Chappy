@@ -23,9 +23,9 @@ function LoginPage() {
 
     try {
       const { token, userId } = await login(username, password);
-      // Sparar JWT-token under webbläsarsessionen.
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("userId", userId)
+      //Sparar JWT-token och användar-ID i webbläsarens localStorage
+localStorage.setItem("token", token);
+localStorage.setItem("userId", userId);
       // Skickar användaren till chatten.
       navigate("/chat");
     } catch {

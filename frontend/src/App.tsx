@@ -107,11 +107,13 @@ function App() {
     localStorage.removeItem("userId");
 
     //laddar om appen utan inloggning
-    window.location.reload();
+    window.location.href = "/login"
   }
 
   // Skapar eller öppnar en DM med angiven användare
   async function handleCreateDM(): Promise<void> {
+     console.log("Token finns:", Boolean(token));
+console.log("Mottagare:", recipient);
     // Avbryter om JWT eller användarnamn saknas
     if (!token || !recipient.trim()) return;
 
@@ -122,8 +124,12 @@ function App() {
       // Sparar konversationens ID
       setChatId(chat.chatId);
 
-      // Tömmer tidigare meddelanden när chatt med ny person startas
-      setMessages([]);
+     // uppdaaterar listan med konversationer
+     const updatedChats = await getChats(token);
+     setChats(updatedChats);
+
+     //Tömmer tidigare meddelanden
+     setMessages([]);
 
 
       console.log("DM öppnad", chat.chatId);
@@ -244,7 +250,10 @@ function App() {
               setMessages([]);
             }}
           >
-            {chat.chatId}
+            {users.find((user) =>
+  user.userId !== currentUserId &&
+  chat.chatId.includes(user.userId)
+)?.username ?? chat.chatId}
           </button>
         ))}
       </div>
