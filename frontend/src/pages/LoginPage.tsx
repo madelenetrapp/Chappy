@@ -83,6 +83,19 @@ localStorage.setItem("userId", userId);
           <button className="login-button" type="submit">
             Logga in
           </button>
+          
+          {/* fortsätt till öppna kanaler utan inloggning */}
+          <button 
+          className="login-button guest-button"
+          type="button"
+          onClick={() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
+            navigate("/chat");
+          }}
+          >
+            Fortsätt som gäst
+          </button>
 
           {/* Navigerar till registreringssidan */}
           <Link className="register-link" to="/register">

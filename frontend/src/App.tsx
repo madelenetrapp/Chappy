@@ -12,23 +12,26 @@ import ChatMessageComponent from "./components/ChatMessage.js";
 import type { ChatMessage } from "./schemas/chatMessageSchema";
 import { getUsers } from "./api/usersApi.js";
 import type { User } from "./api/usersApi.js";
+import { getChannels } from "./api/channelsApi.js";
+import type { Channel } from "./api/channelsApi.js";
 // Pilar för att öppna och stänga 
 import leftArrow from "./assets/left-arrow.svg";
 import rightArrow from "./assets/right-arrow.svg";
 import contactIcon from "./assets/contact-icon.svg";
 import mobileOverlayClose from "./assets/mobile-overlay-close.svg";
+import { Lock } from "lucide-react";
 
 // Typ för panelerna på mobil och surfplatta
 type MobileOverlay = "chats" | "contacts" | "settings" | null;
 
 // Exempeldata från Figma TODO
-const exampleChats: string[] = [
-  "Skadeärende – Anna Svensson",
-  "Hemförsäkring – Ahmed Hassan",
-  "Bilskada – Maria Nilsson",
-  "Ersättningsfråga – John Smith",
-  "Reseförsäkring – Sofia Andersson",
-];
+// const exampleChats: string[] = [
+//   "Skadeärende – Anna Svensson",
+//   "Hemförsäkring – Ahmed Hassan",
+//   "Bilskada – Maria Nilsson",
+//   "Ersättningsfråga – John Smith",
+//   "Reseförsäkring – Sofia Andersson",
+// ];
 
 // Exempelkontakter från Figma TODO
 // const exampleContacts: string[] = [
@@ -59,6 +62,9 @@ function App() {
   //sparar användarens konversationer från dynamoDB
   const [chats, setChats] = useState<ChatListItem[]>([]);
 
+  // spara kanalerna som hämtas från DynamoDB
+ const [channels, setChannels] = useState<Channel[]>([]);
+
   // Sparar användarnamnet för en ny DM
   const [recipient, setRecipient] = useState<string>("");
 
@@ -78,8 +84,8 @@ function App() {
     useState<string>("Svenska");
 
   // Sparar markerad exempelchatt
-  const [selectedChat, setSelectedChat] =
-    useState<string | null>(null);
+  // const [selectedChat, setSelectedChat] =
+  //   useState<string | null>(null);
 
   // Sparar markerad kontakt
   const [selectedContact, setSelectedContact] =
@@ -231,6 +237,45 @@ console.log("Mottagare:", recipient);
     messageRef.current.scrollTop =
       messageRef.current.scrollHeight;
   }, [messages]);
+
+  // hämtar alla kanaler när sidan öppnas
+  useEffect(() => {
+    async function loadChannels(): Promise<void> {
+      try {
+        const data = await getChannels();
+        setChannels(data);
+      } catch (error) {
+        console.error("Kunde inte hämta kanaler:", error)
+      }
+    }
+
+    void loadChannels();
+  }, []);
+
+  // visar alla kanaler
+  function renderChannels() {
+    return (
+    <div className="sidebar-list">
+      {channels.map((channel) => (
+        <button
+          key={channel.chatId}
+          type="button"
+          // markerar den valda kanalen med css klass active, aria-pressed visar för hjälpmedel om kanalen är vald
+          className={`sidbar-item ${chatId === channel.chatId ? "activ" : ""}`}
+          aria-pressed={chatId === channel.chatId}
+          onClick={() => {
+            setChatId(channel.chatId);
+            setMessages([]);
+          }}
+        >
+          {/* reacts egna ikoner */}
+          {channel.locked && <Lock size={14} className="channel-lock" />}  
+          {channel.name}
+        </button>
+      ))}
+    </div>
+    )
+  }
 
  
   // Visar användarens sparade konversationer
@@ -462,6 +507,11 @@ console.log("Mottagare:", recipient);
         {/* vänster sidopanel */}
         <aside className="chat-sidebar">
 
+          <section className="sidebar-section">
+            <h2>Kanaler</h2>
+            {renderChannels()}
+          </section>
+
           {/* Tillgängliga chatar */}
           <section className="sidebar-section">
             <button
@@ -522,6 +572,7 @@ console.log("Mottagare:", recipient);
             )}
           </section>
         </aside>
+
 
         {/* chatt */}
         <main className="chat-content">

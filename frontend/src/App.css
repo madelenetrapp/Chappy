@@ -122,6 +122,7 @@
 /* Pilarnas storlek */
 .sidebar-arrow {
   flex-shrink: 0;
+  transform: rotate(-90deg);
   width: 10px;
   height: 10px;
 
@@ -259,6 +260,12 @@
 .sidebar-item:focus-visible {
   outline: 2px solid #162451;
   outline-offset: 2px;
+}
+
+.channel-lock {
+  color: rgb(181, 17, 17);
+  /* fill: rgb(181, 17, 17); */
+  margin-right: 5px;
 }
 
 /* chatt */
