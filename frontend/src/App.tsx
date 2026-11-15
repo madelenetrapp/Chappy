@@ -11,14 +11,12 @@ import { getMessages, sendMessage } from "./api/messagesApi.js";
 import { createDM, getChats } from "./api/chatsApi.js";
 import ChatList from "./components/ChatList.js";
 // Komponenter
-import ChatInput from "./components/ChatInput.js";
-import ChatMessageComponent from "./components/ChatMessage.js";
 // Typ för chattmeddelanden
 import type { ChatMessage } from "./schemas/chatMessageSchema";
 import { getUsers } from "./api/usersApi.js";
 import ChatSettings from "./components/ChatSettings.js";
 import { getChannels } from "./api/channelsApi.js";
-
+import ChatWindow from "./components/ChatWindow.js";
 // Importerar funktionen som översätter meddelanden via backend
 import { translateMessage } from "./api/translationApi.js";
 import LanguageSelector from "./components/LanguageSelector.js";
@@ -542,52 +540,35 @@ function App() {
 
 
 
-     
 
 
-          <ChatSidebar
-            channels={channels}
-            chats={chats}
-            users={users}
-            chatId={chatId}
-            currentUserId={currentUserId}
-            setChatId={setChatId}
-            clearMessages={() => setMessages([])}
-            showChats={showChats}
-            setShowChats={setShowChats}
-            showContacts={showContacts}
-            setShowContacts={setShowContacts}
-            selectedContact={selectedContact}
-            setSelectedContact={setSelectedContact}
-            recipient={recipient}
-            setRecipient={setRecipient}
-            handleCreateDM={handleCreateDM}
-          />
-   {/* chatt */}
-        <main className="chat-content">
 
-          {/* Meddelandeområdet */}
-          <div
-            className="chat-messages"
-            ref={messageRef}
-          >
-            {/* Renderar varje meddelande */}
-            {messages.map((message) => (
-              <ChatMessageComponent
-                key={message.id}
-                message={message}
-                currentUserId={currentUserId ?? ""}
-                translatedText={translations[message.id]}
-              />
-            ))}
-          </div>
+        <ChatSidebar
+          channels={channels}
+          chats={chats}
+          users={users}
+          chatId={chatId}
+          currentUserId={currentUserId}
+          setChatId={setChatId}
+          clearMessages={() => setMessages([])}
+          showChats={showChats}
+          setShowChats={setShowChats}
+          showContacts={showContacts}
+          setShowContacts={setShowContacts}
+          selectedContact={selectedContact}
+          setSelectedContact={setSelectedContact}
+          recipient={recipient}
+          setRecipient={setRecipient}
+          handleCreateDM={handleCreateDM}
+        />
 
-          {/* skrivfältet längst ner */}
-          <div className="chat-input-area">
-            <ChatInput onSend={handleSend} />
-          </div>
-        </main>
-        
+        <ChatWindow
+          messageRef={messageRef}
+          messages={messages}
+          currentUserId={currentUserId}
+          translations={translations}
+          handleSend={handleSend}
+        />
 
         <ChatSettings
           showSettings={showSettings}
