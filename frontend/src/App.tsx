@@ -2,7 +2,7 @@ import "./App.css";
 import { useEffect, useRef, useState } from "react";
 // API-funktioner
 import type { ChatListItem } from "./api/chatsApi.js";
-import type { User } from "./api/usersApi.js";
+import ContactList from "./components/ContactList.js";
 import { getHealth } from "./api/healthApi.js";
 import { getMessages, sendMessage } from "./api/messagesApi.js";
 import { createDM, getChats } from "./api/chatsApi.js";
@@ -24,7 +24,7 @@ import type { Channel } from "./api/channelsApi.js";
 // Pilar för att öppna och stänga 
 import leftArrow from "./assets/left-arrow.svg";
 import rightArrow from "./assets/right-arrow.svg";
-import contactIcon from "./assets/contact-icon.svg";
+import type { User } from "./api/usersApi.js";
 import mobileOverlayClose from "./assets/mobile-overlay-close.svg";
 
 
@@ -370,58 +370,58 @@ function App() {
   // }
 
 
-  // Återanvändbar kontaktlista med DM-funktion
-  function renderContacts() {
-    return (
-      <div className="sidebar-list contacts-container">
-        <div className="contacts-scroll">
-          {users.map((user) => (
-            <button
-              key={user.userId}
-              type="button"
-              className={`sidebar-item contact-item ${selectedContact === user.username ? "active" : ""
-                }`}
-              aria-pressed={selectedContact === user.username}
-              onClick={() => {
-                // Markerar kontakten och fyller i användarnamnet
-                setSelectedContact(user.username);
-                setRecipient(user.username);
-              }}
-            >
-              {/* Kontaktikon */}
-              <img
-                src={contactIcon}
-                className="contact-icon"
-                alt=""
-                aria-hidden="true"
-              />
+  // // Återanvändbar kontaktlista med DM-funktion
+  // function renderContacts() {
+  //   return (
+  //     <div className="sidebar-list contacts-container">
+  //       <div className="contacts-scroll">
+  //         {users.map((user) => (
+  //           <button
+  //             key={user.userId}
+  //             type="button"
+  //             className={`sidebar-item contact-item ${selectedContact === user.username ? "active" : ""
+  //               }`}
+  //             aria-pressed={selectedContact === user.username}
+  //             onClick={() => {
+  //               // Markerar kontakten och fyller i användarnamnet
+  //               setSelectedContact(user.username);
+  //               setRecipient(user.username);
+  //             }}
+  //           >
+  //             {/* Kontaktikon */}
+  //             <img
+  //               src={contactIcon}
+  //               className="contact-icon"
+  //               alt=""
+  //               aria-hidden="true"
+  //             />
 
-              <span className="contact-name">
-                {user.username}
-              </span>
+  //             <span className="contact-name">
+  //               {user.username}
+  //             </span>
 
-            </button>
-          ))}
-        </div>
+  //           </button>
+  //         ))}
+  //       </div>
 
-        {/* funktion för att starta DM */}
-        <input
-          type="text"
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-          placeholder="Användarnamn"
-          aria-label="Användarnamn"
-        />
+  {/* funktion för att starta DM */ }
+  //       <input
+  //         type="text"
+  //         value={recipient}
+  //         onChange={(e) => setRecipient(e.target.value)}
+  //         placeholder="Användarnamn"
+  //         aria-label="Användarnamn"
+  //       />
 
-        <button
-          type="button"
-          onClick={() => handleCreateDM()}
-        >
-          Starta DM
-        </button>
-      </div>
-    );
-  }
+  //       <button
+  //         type="button"
+  //         onClick={() => handleCreateDM()}
+  //       >
+  //         Starta DM
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   //  språkval med radioknappar
   // function renderLanguages(groupName: string) {
@@ -507,7 +507,14 @@ function App() {
             {mobileOverlay === "contacts" && (
               <section className="sidebar-section">
                 <h2>Kontakter</h2>
-                {renderContacts()}
+                <ContactList
+                  users={users}
+                  selectedContact={selectedContact}
+                  setSelectedContact={setSelectedContact}
+                  recipient={recipient}
+                  setRecipient={setRecipient}
+                  handleCreateDM={handleCreateDM}
+                />
               </section>
             )}
 
@@ -605,7 +612,14 @@ function App() {
             {/* Visar kontaktlistan */}
             {showContacts && (
               <div id="contacts">
-                {renderContacts()}
+                <ContactList
+                  users={users}
+                  selectedContact={selectedContact}
+                  setSelectedContact={setSelectedContact}
+                  recipient={recipient}
+                  setRecipient={setRecipient}
+                  handleCreateDM={handleCreateDM}
+                />
               </div>
             )}
           </section>
