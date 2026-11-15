@@ -5,8 +5,6 @@ import type { ChatListItem } from "./api/chatsApi.js";
 import type { Channel } from "./api/channelsApi.js";
 import type { User } from "./api/usersApi.js";
 import ContactList from "./components/ContactList.js";
-import leftArrow from "./assets/left-arrow.svg";
-import rightArrow from "./assets/right-arrow.svg";
 import ChatSidebar from "./components/ChatSidebar.js";
 import { getHealth } from "./api/healthApi.js";
 import { getMessages, sendMessage } from "./api/messagesApi.js";
@@ -18,7 +16,7 @@ import ChatMessageComponent from "./components/ChatMessage.js";
 // Typ för chattmeddelanden
 import type { ChatMessage } from "./schemas/chatMessageSchema";
 import { getUsers } from "./api/usersApi.js";
-
+import ChatSettings from "./components/ChatSettings.js";
 import { getChannels } from "./api/channelsApi.js";
 
 // Importerar funktionen som översätter meddelanden via backend
@@ -544,8 +542,7 @@ function App() {
 
 
 
-        {/* chatt */}
-        <main className="chat-content">
+     
 
 
           <ChatSidebar
@@ -566,7 +563,8 @@ function App() {
             setRecipient={setRecipient}
             handleCreateDM={handleCreateDM}
           />
-
+   {/* chatt */}
+        <main className="chat-content">
 
           {/* Meddelandeområdet */}
           <div
@@ -589,49 +587,18 @@ function App() {
             <ChatInput onSend={handleSend} />
           </div>
         </main>
+        
 
-        {/* höger panell */}
-        <aside className="chat-settings">
+        <ChatSettings
+          showSettings={showSettings}
+          setShowSettings={setShowSettings}
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
+          setTranslations={setTranslations}
+        />
 
-          {/* Ljusblå container för språkval */}
-          <section className="settings-section">
-            <button
-              type="button"
-              className="sidebar-toggle"
-              onClick={() =>
-                setShowSettings(!showSettings)
-              }
-              aria-expanded={showSettings}
-              aria-controls="language-settings"
-            >
-              <span>Språkinställningar</span>
-
-              <img
-                className="sidebar-arrow"
-                src={
-                  showSettings ? leftArrow : rightArrow
-                }
-                alt=""
-                aria-hidden="true"
-              />
-            </button>
-
-            {/* visar språkvaln */}
-            {showSettings && (
-              <div id="language-settings">
-                <LanguageSelector
-                  groupName="desktop-language"
-                  selectedLanguage={selectedLanguage}
-                  setSelectedLanguage={setSelectedLanguage}
-                  setTranslations={setTranslations}
-                />
-              </div>
-            )}
-          </section>
-        </aside>
       </div>
     </div>
   );
 }
-
 export default App;
