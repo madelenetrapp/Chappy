@@ -4,7 +4,6 @@ type Channel = {
   locked: boolean;
 };
 
-// Hämtar alla kanaler från backend
 async function getChannels(): Promise<Channel[]> {
   const response = await fetch("/api/channels");
 

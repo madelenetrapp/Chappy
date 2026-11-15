@@ -11,7 +11,6 @@ type ChatListProps = {
   clearMessages: () => void;
 };
 
-  // Visar användarens sparade konversationer
   function ChatList({
   chats,
   users,

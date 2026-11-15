@@ -1,3 +1,4 @@
+
 import type { User } from "../api/usersApi.js";
 import contactIcon from "../assets/contact-icon.svg";
 
@@ -10,7 +11,6 @@ type ContactListProps = {
   handleCreateDM: () => Promise<void>;
 };
 
-// Återanvändbar kontaktlista med DM-funktion
 function ContactList({
   users,
   selectedContact,
@@ -30,12 +30,10 @@ function ContactList({
               }`}
             aria-pressed={selectedContact === user.username}
             onClick={() => {
-              // Markerar kontakten och fyller i användarnamnet
               setSelectedContact(user.username);
               setRecipient(user.username);
             }}
           >
-            {/* Kontaktikon */}
             <img
               src={contactIcon}
               className="contact-icon"
@@ -51,7 +49,6 @@ function ContactList({
         ))}
       </div>
 
-      {/* funktion för att starta DM */}
       <input
         type="text"
         value={recipient}

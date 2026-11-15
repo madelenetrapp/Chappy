@@ -1,59 +1,51 @@
-import "./LoginPage.css"
-import { useState } from "react"; //Hanterar värden som kan förändras
-import { useNavigate } from "react-router";  // används för att navigera mellan sidor
-import { login, register } from "../api/authApi";  // API-funktioner för registrering och inloggning
 
-//visar registreringssidan
+import "./LoginPage.css"
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { login, register } from "../api/authApi";
+
 function RegisterPage() {
 
-  const [username, setUsername] = useState<string>("");   //sparar användarnamnet som skrivs in
-  const [password, setPassword] = useState<string>("");    //sparar lösenordet som skrivs in 
-  const [error, setError] = useState<string>("");         // sparar ett felmeddelande om registreringen misslyckas
-  const navigate = useNavigate();                          // funktion för att navigerea till en annan sida
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
 
-  async function handleRegister(): Promise<void> {          //hanterar registerringen när användaren skickar formuläret
-    setError("");                                           // rensar tidigare felmeddelanden
+  async function handleRegister(): Promise<void> {
+    setError("");
 
     try {
 
-      //skickar användarnamn och lösenord till backend för att skapa kontot
       await register(username, password);
 
-      //loggar in användaren automatiskt efter lyckad registrering 
       const { token, userId } = await login(username, password);
 
-      sessionStorage.setItem("token", token);                         //sparar jwt-token för autentisering API-anrop
-      sessionStorage.setItem("userId", userId);                        //sparar användarens ID för att identifiera den inloggade användaren 
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userId", userId);
 
-      //skickar användaren till chattsidan
       navigate("/chat");
 
     } catch {
-      setError("Registreringen misslyckades. Försök igen");             // visar ett felmeddelande om registreringen eller inloggningen misslyckas
+      setError("Registreringen misslyckades. Försök igen");
     }
   }
 
-  //Renderar registreringssidan innehåll
   return (
     <div className="login-page">
       <header className="login-header"></header>
 
       <main className="login-main">
 
-        {/* formulär som använder samma stil som inloggningssidan */}
         <form className="login-card"
           onSubmit={(e) => {
 
-            //stoppar sidan från att ladda om
             e.preventDefault();
 
-            //Anropar funktionen som registerar användaren
             void handleRegister();
           }}
         >
           <h1>Registrera konto</h1>
 
-          {/* inputfält för användarnamn */}
           <input
             type="text"
             placeholder="Användarnamn"
@@ -62,7 +54,6 @@ function RegisterPage() {
             required
           />
 
-          {/* inputfält för lösenord */}
           <input
             type="password"
             placeholder="Lösenord"
@@ -71,10 +62,8 @@ function RegisterPage() {
             required
           />
 
-          {/* visar felmeddelandet om error innehåller text */}
           {error && <p role="alert">{error}</p>}
 
-          {/* skickar formulären när användaren klickar */}
           <button type="submit" className="login-button">
             Registrera konto
           </button>

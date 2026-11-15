@@ -3,7 +3,6 @@ type User = {
   username: string;
 };
 
-//Hämtar registerarade användare från backend
 async function getUsers(): Promise<User[]> {
   const response = await fetch("/api/users");
 

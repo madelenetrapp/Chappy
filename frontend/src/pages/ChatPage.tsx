@@ -1,6 +1,5 @@
-import App from "../App.js";
+import App from "../components/ChatLayout.js";
 
-//Visar den befintliga chatten på chattsidan
 function ChatPage() {
   return <App />;
 }

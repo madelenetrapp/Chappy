@@ -1,7 +1,6 @@
-import App from "../App.js";
+import App from "../components/ChatLayout.js";
 import { Link } from "react-router";
 
-//visar den befintlga chatten för gäster
 function GuestPage() {
 
   return (
@@ -16,6 +15,3 @@ function GuestPage() {
 }
 
 export default GuestPage;
-
-// Gäster kan välja att logga in eller registrera sig 
-// Visar den befintliga öppna chatten

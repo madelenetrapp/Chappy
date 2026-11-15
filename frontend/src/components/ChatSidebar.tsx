@@ -45,8 +45,11 @@ function ChatSidebar({
   setRecipient,
   handleCreateDM,
 }: ChatSidebarProps) {
+
+
   return (
     <aside className="chat-sidebar">
+
       <section className="sidebar-section">
         <h2>Kanaler</h2>
         <ChannelList
@@ -61,14 +64,19 @@ function ChatSidebar({
         <button
           type="button"
           className="sidebar-toggle"
-          onClick={() => setShowChats(!showChats)}
+          onClick={() =>
+            setShowChats(!showChats)
+          }
           aria-expanded={showChats}
           aria-controls="available-chats"
         >
           <span>Tillgängliga chattar</span>
+
           <img
             className="sidebar-arrow"
-            src={showChats ? leftArrow : rightArrow}
+            src={
+              showChats ? leftArrow : rightArrow
+            }
             alt=""
           />
         </button>
@@ -91,14 +99,19 @@ function ChatSidebar({
         <button
           type="button"
           className="sidebar-toggle"
-          onClick={() => setShowContacts(!showContacts)}
+          onClick={() =>
+            setShowContacts(!showContacts)
+          }
           aria-expanded={showContacts}
           aria-controls="contacts"
         >
           <span>Kontakter</span>
+
           <img
             className="sidebar-arrow"
-            src={showContacts ? leftArrow : rightArrow}
+            src={
+              showContacts ? leftArrow : rightArrow
+            }
             alt=""
           />
         </button>
