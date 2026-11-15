@@ -1,4 +1,4 @@
-import App from "../components/ChatLayout.js";
+// import App from "../components/ChatLayout.js";
 import { Link } from "react-router";
 
 function GuestPage() {
