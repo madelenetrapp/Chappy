@@ -1,17 +1,19 @@
 import "./App.css";
 import { useEffect, useRef, useState } from "react";
 // API-funktioner
+import type { ChatListItem } from "./api/chatsApi.js";
+import type { User } from "./api/usersApi.js";
 import { getHealth } from "./api/healthApi.js";
 import { getMessages, sendMessage } from "./api/messagesApi.js";
 import { createDM, getChats } from "./api/chatsApi.js";
-import type { ChatListItem } from "./api/chatsApi.js";
+import ChatList from "./components/ChatList.js";
 // Komponenter
 import ChatInput from "./components/ChatInput.js";
 import ChatMessageComponent from "./components/ChatMessage.js";
 // Typ för chattmeddelanden
 import type { ChatMessage } from "./schemas/chatMessageSchema";
 import { getUsers } from "./api/usersApi.js";
-import type { User } from "./api/usersApi.js";
+
 import { getChannels } from "./api/channelsApi.js";
 import ChannelList from "./components/ChannelList.js";
 // Importerar funktionen som översätter meddelanden via backend
@@ -341,31 +343,31 @@ function App() {
   // }
 
 
-  // Visar användarens sparade konversationer
-  function renderChats() {
-    return (
-      <div className="sidebar-list">
-        {chats.map((chat) => (
-          <button
-            key={chat.chatId}
-            type="button"
-            className={`sidebar-item ${chatId === chat.chatId ? "active" : ""
-              }`}
-            aria-pressed={chatId === chat.chatId}
-            onClick={() => {
-              setChatId(chat.chatId);
-              setMessages([]);
-            }}
-          >
-            {users.find((user) =>
-              user.userId !== currentUserId &&
-              chat.chatId.includes(user.userId)
-            )?.username ?? chat.chatId}
-          </button>
-        ))}
-      </div>
-    );
-  }
+  // // Visar användarens sparade konversationer
+  // function renderChats() {
+  //   return (
+  //     <div className="sidebar-list">
+  //       {chats.map((chat) => (
+  //         <button
+  //           key={chat.chatId}
+  //           type="button"
+  //           className={`sidebar-item ${chatId === chat.chatId ? "active" : ""
+  //             }`}
+  //           aria-pressed={chatId === chat.chatId}
+  //           onClick={() => {
+  //             setChatId(chat.chatId);
+  //             setMessages([]);
+  //           }}
+  //         >
+  //           {users.find((user) =>
+  //             user.userId !== currentUserId &&
+  //             chat.chatId.includes(user.userId)
+  //           )?.username ?? chat.chatId}
+  //         </button>
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
 
   // Återanvändbar kontaktlista med DM-funktion
@@ -490,7 +492,14 @@ function App() {
             {mobileOverlay === "chats" && (
               <section className="sidebar-section">
                 <h2>Tillgängliga chattar</h2>
-                {renderChats()}
+                <ChatList
+                  chats={chats}
+                  users={users}
+                  chatId={chatId}
+                  currentUserId={currentUserId}
+                  setChatId={setChatId}
+                  clearMessages={() => setMessages([])}
+                />
               </section>
             )}
 
@@ -559,7 +568,14 @@ function App() {
             {/* Visar chattlistan */}
             {showChats && (
               <div id="available-chats">
-                {renderChats()}
+                <ChatList
+                  chats={chats}
+                  users={users}
+                  chatId={chatId}
+                  currentUserId={currentUserId}
+                  setChatId={setChatId}
+                  clearMessages={() => setMessages([])}
+                />
               </div>
             )}
           </section>
