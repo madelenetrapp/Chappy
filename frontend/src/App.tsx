@@ -2,7 +2,12 @@ import "./App.css";
 import { useEffect, useRef, useState } from "react";
 // API-funktioner
 import type { ChatListItem } from "./api/chatsApi.js";
+import type { Channel } from "./api/channelsApi.js";
+import type { User } from "./api/usersApi.js";
 import ContactList from "./components/ContactList.js";
+import leftArrow from "./assets/left-arrow.svg";
+import rightArrow from "./assets/right-arrow.svg";
+import ChatSidebar from "./components/ChatSidebar.js";
 import { getHealth } from "./api/healthApi.js";
 import { getMessages, sendMessage } from "./api/messagesApi.js";
 import { createDM, getChats } from "./api/chatsApi.js";
@@ -15,16 +20,15 @@ import type { ChatMessage } from "./schemas/chatMessageSchema";
 import { getUsers } from "./api/usersApi.js";
 
 import { getChannels } from "./api/channelsApi.js";
-import ChannelList from "./components/ChannelList.js";
+
 // Importerar funktionen som översätter meddelanden via backend
 import { translateMessage } from "./api/translationApi.js";
 import LanguageSelector from "./components/LanguageSelector.js";
 import ChatHeader from "./components/ChatHeader.js";
-import type { Channel } from "./api/channelsApi.js";
+
 // Pilar för att öppna och stänga 
-import leftArrow from "./assets/left-arrow.svg";
-import rightArrow from "./assets/right-arrow.svg";
-import type { User } from "./api/usersApi.js";
+
+
 import mobileOverlayClose from "./assets/mobile-overlay-close.svg";
 
 
@@ -537,97 +541,32 @@ function App() {
       {/* layout */}
       <div className="chat-main">
 
-        {/* vänster sidopanel */}
-        <aside className="chat-sidebar">
 
-          <section className="sidebar-section">
-            <h2>Kanaler</h2>
-            <ChannelList
-              channels={channels}
-              chatId={chatId}
-              setChatId={setChatId}
-              setMessages={() => setMessages([])}
-            />
-          </section>
-
-          {/* Tillgängliga chatar */}
-          <section className="sidebar-section">
-            <button
-              type="button"
-              className="sidebar-toggle"
-              onClick={() =>
-                setShowChats(!showChats)
-              }
-              aria-expanded={showChats}
-              aria-controls="available-chats"
-            >
-              <span>Tillgängliga chattar</span>
-
-              <img
-                className="sidebar-arrow"
-                src={
-                  showChats ? leftArrow : rightArrow
-                }
-                alt=""
-              />
-            </button>
-
-            {/* Visar chattlistan */}
-            {showChats && (
-              <div id="available-chats">
-                <ChatList
-                  chats={chats}
-                  users={users}
-                  chatId={chatId}
-                  currentUserId={currentUserId}
-                  setChatId={setChatId}
-                  clearMessages={() => setMessages([])}
-                />
-              </div>
-            )}
-          </section>
-
-          {/* Kontakter */}
-          <section className="sidebar-section">
-            <button
-              type="button"
-              className="sidebar-toggle"
-              onClick={() =>
-                setShowContacts(!showContacts)
-              }
-              aria-expanded={showContacts}
-              aria-controls="contacts"
-            >
-              <span>Kontakter</span>
-
-              <img
-                className="sidebar-arrow"
-                src={
-                  showContacts ? leftArrow : rightArrow
-                }
-                alt=""
-              />
-            </button>
-
-            {/* Visar kontaktlistan */}
-            {showContacts && (
-              <div id="contacts">
-                <ContactList
-                  users={users}
-                  selectedContact={selectedContact}
-                  setSelectedContact={setSelectedContact}
-                  recipient={recipient}
-                  setRecipient={setRecipient}
-                  handleCreateDM={handleCreateDM}
-                />
-              </div>
-            )}
-          </section>
-        </aside>
 
 
         {/* chatt */}
         <main className="chat-content">
+
+
+          <ChatSidebar
+            channels={channels}
+            chats={chats}
+            users={users}
+            chatId={chatId}
+            currentUserId={currentUserId}
+            setChatId={setChatId}
+            clearMessages={() => setMessages([])}
+            showChats={showChats}
+            setShowChats={setShowChats}
+            showContacts={showContacts}
+            setShowContacts={setShowContacts}
+            selectedContact={selectedContact}
+            setSelectedContact={setSelectedContact}
+            recipient={recipient}
+            setRecipient={setRecipient}
+            handleCreateDM={handleCreateDM}
+          />
+
 
           {/* Meddelandeområdet */}
           <div
