@@ -1,3 +1,4 @@
+
 import ChannelList from "./ChannelList.js";
 import ChatList from "./ChatList.js";
 import ContactList from "./ContactList.js";
@@ -25,7 +26,7 @@ type ChatSidebarProps = {
   setRecipient: (username: string) => void;
   handleCreateDM: () => Promise<void>;
 };
-        
+
 function ChatSidebar({
   channels,
   chats,
@@ -45,96 +46,91 @@ function ChatSidebar({
   handleCreateDM,
 }: ChatSidebarProps) {
 
-  
+
   return (
-  <aside className="chat-sidebar">
-    {/* vänster sidopanel */}
+    <aside className="chat-sidebar">
 
-          <section className="sidebar-section">
-            <h2>Kanaler</h2>
-            <ChannelList
-              channels={channels}
-              chatId={chatId}
-              setChatId={setChatId}
+      <section className="sidebar-section">
+        <h2>Kanaler</h2>
+        <ChannelList
+          channels={channels}
+          chatId={chatId}
+          setChatId={setChatId}
           setMessages={clearMessages}
+        />
+      </section>
+
+      <section className="sidebar-section">
+        <button
+          type="button"
+          className="sidebar-toggle"
+          onClick={() =>
+            setShowChats(!showChats)
+          }
+          aria-expanded={showChats}
+          aria-controls="available-chats"
+        >
+          <span>Tillgängliga chattar</span>
+
+          <img
+            className="sidebar-arrow"
+            src={
+              showChats ? leftArrow : rightArrow
+            }
+            alt=""
+          />
+        </button>
+
+        {showChats && (
+          <div id="available-chats">
+            <ChatList
+              chats={chats}
+              users={users}
+              chatId={chatId}
+              currentUserId={currentUserId}
+              setChatId={setChatId}
+              clearMessages={clearMessages}
             />
-          </section>
+          </div>
+        )}
+      </section>
 
-          {/* Tillgängliga chatar */}
-          <section className="sidebar-section">
-            <button
-              type="button"
-              className="sidebar-toggle"
-              onClick={() =>
-                setShowChats(!showChats)
-              }
-              aria-expanded={showChats}
-              aria-controls="available-chats"
-            >
-              <span>Tillgängliga chattar</span>
+      <section className="sidebar-section">
+        <button
+          type="button"
+          className="sidebar-toggle"
+          onClick={() =>
+            setShowContacts(!showContacts)
+          }
+          aria-expanded={showContacts}
+          aria-controls="contacts"
+        >
+          <span>Kontakter</span>
 
-              <img
-                className="sidebar-arrow"
-                src={
-                  showChats ? leftArrow : rightArrow
-                }
-                alt=""
-              />
-            </button>
+          <img
+            className="sidebar-arrow"
+            src={
+              showContacts ? leftArrow : rightArrow
+            }
+            alt=""
+          />
+        </button>
 
-            {/* Visar chattlistan */}
-            {showChats && (
-              <div id="available-chats">
-                <ChatList
-                  chats={chats}
-                  users={users}
-                  chatId={chatId}
-                  currentUserId={currentUserId}
-                  setChatId={setChatId}
-                  clearMessages={clearMessages}
-                />
-              </div>
-            )}
-          </section>
-
-          {/* Kontakter */}
-          <section className="sidebar-section">
-            <button
-              type="button"
-              className="sidebar-toggle"
-              onClick={() =>
-                setShowContacts(!showContacts)
-              }
-              aria-expanded={showContacts}
-              aria-controls="contacts"
-            >
-              <span>Kontakter</span>
-
-              <img
-                className="sidebar-arrow"
-                src={
-                  showContacts ? leftArrow : rightArrow
-                }
-                alt=""
-              />
-            </button>
-
-            {/* Visar kontaktlistan */}
-            {showContacts && (
-              <div id="contacts">
-                <ContactList
-                  users={users}
-                  selectedContact={selectedContact}
-                  setSelectedContact={setSelectedContact}
-                  recipient={recipient}
-                  setRecipient={setRecipient}
-                  handleCreateDM={handleCreateDM}
-                />
-              </div>
-            )}
-          </section>
-        </aside>
-          );
+        {showContacts && (
+          <div id="contacts">
+            <ContactList
+              users={users}
+              selectedContact={selectedContact}
+              setSelectedContact={setSelectedContact}
+              recipient={recipient}
+              setRecipient={setRecipient}
+              handleCreateDM={handleCreateDM}
+            />
+          </div>
+        )}
+      </section>
+    </aside>
+  );
 }
 
 export default ChatSidebar;

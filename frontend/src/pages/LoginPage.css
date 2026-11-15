@@ -1,4 +1,4 @@
-/* Hela inloggningssidan */
+
 .login-page {
   min-height: 100vh;
   display: flex;
@@ -6,7 +6,6 @@
   background: linear-gradient(120deg, #d7dde7, #f0f1f4);
 }
 
-/* Mörkblå sidhuvud med logotyp */
 .login-header {
   display: flex;
   align-items: center;
@@ -16,13 +15,11 @@
   min-height: 60px;
 }
 
-/* logotypens storlek */
 .login-logo {
   width: 65px;
   height: auto;
 }
 
-/* centrerar inloggningsformuläret */
 .login-main {
   display: flex;
   flex: 1;
@@ -31,7 +28,6 @@
   padding: 40px 20px;
 }
 
-/* Vitt kort runt formuläret */
 .login-card {
   width: 100%;
   max-width: 315px;
@@ -40,14 +36,12 @@
   border-radius: 5px;
 }
 
-/* Rubriken Logga in */
 .login-card h1 {
   margin: 0 0 16px;
   font-size: 24px;
   color: #111;
 }
 
-/* Texten under rubriken */
 .login-description {
   margin-bottom: 24px;
   font-size: px;
@@ -55,7 +49,6 @@
   color: #aca8a8;
 }
 
-/* Ettikett ovanför fälten */
 .login-card label {
   display: block;
   margin-bottom: 6px;
@@ -64,7 +57,6 @@
   color: #111;
 }
 
-/* Fälten för användarnamn och lösenord */
 .login-card input {
   width: 100%;
   box-sizing: border-box;
@@ -75,7 +67,6 @@
   font-size: 14px;
 }
 
-/* Knappen logga in */
 .login-button {
   width: 100%;
   padding: 12px;
@@ -88,7 +79,6 @@
   cursor: pointer;
 }
 
-/* knapp gäst */
 .guest-button {
   background-color: #8b90a8;
   margin-top: 10px;
@@ -98,12 +88,10 @@
   background-color: #747990;
 }
 
-/* visuell feedback när knappen används */
 .login-button:hover {
   background-color: #6f7794;
 }
 
-/* Länk till registrering */
 .register-link {
   display: block;
   text-align: center;
@@ -114,7 +102,6 @@
   font-weight: bold;
 }
 
-/* Sidfot */
 .login-footer {
   padding: 20px;
   background-color: #172650;
@@ -123,7 +110,6 @@
   font-size: 12px;
 }
 
-/* Mobil först */
 .login-header {
   justify-content: center;
 }
@@ -144,7 +130,6 @@
   box-sizing: border-box;
  }
 
- /* desktop från 768px */
  @media (min-width: 768px) {
   .login-header {
     justify-content: flex-start;

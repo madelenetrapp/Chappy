@@ -1,16 +1,10 @@
 
-
-
-/*  MEDDELANDEFÄLT  */
-
-/* Placerar skrivfältet längst ner i chattområdet */
 .chat-input-container {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Skrivfältets storlek, bakgrund och kantlinje */
 .chat-input {
   width: 100%;
   padding: 12px;
@@ -20,12 +14,6 @@
   box-sizing: border-box;
 }
 
-
-/* Textens utseende i skrivfältet */
-
-/* Utseende på platshållartexten */
-
-/* Skicka-knappens storlek, färg och placering */
 .chat-send-button {
   padding: 12px 20px;
   background-color: #1b2945;
@@ -35,9 +23,6 @@
   cursor: pointer;
 }
 
-/* Skicka-knappens utseende vid hover */
-
-/* Gör att textfälteteväxer på höjden istället för på bredden */
 .chat-input {
   resize: none;
   overflow-y: hidden;
@@ -45,23 +30,16 @@
   max-height: 200px;
 }
 
-/* låter skrivfältet använda tillgängligt utrymme */
 .chat-input {
   display: flex;
   flex: 1;
   min-width: 0;
 }
 
-/* Ändrar knappens färg när muspekaren hålls över den. */
 .chat-send-button:hover {
   background-color: #30466e;
 }
 
-/*  RESPONSIV DESIGN  */
-
-/* Anpassar skrivfältet för mindre skärmar */
-
-/* mobil - tom 767px */
 @media (max-width: 767px) {
   .chat-input-container {
     gap: 6px;
@@ -76,14 +54,12 @@
   }
 }
 
-/* Tablet 768px till 1023px */
 @media (min-width: 768px) and (max-width: 1023px) {
   .chat-input-container {
     gap:8px
   }
 }
 
-/* Tablet och laptop */
 @media (min-width: 768px) {
   .chat-input-container {
     width: 100%;

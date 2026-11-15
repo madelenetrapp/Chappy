@@ -1,3 +1,4 @@
+
 import type { Dispatch, SetStateAction } from "react";
 import type { ChatListItem } from "../api/chatsApi.js";
 import type { User } from "../api/usersApi.js";
@@ -51,74 +52,69 @@ function MobileOverlay({
 }: MobileOverlayProps) {
   return (
 
-mobileOverlay && (
-        <div className="mobile-overlay">
+    mobileOverlay && (
+      <div className="mobile-overlay">
 
-          {/* Stänger overlayen */}
-          <button
-            type="button"
-            className="mobile-overlay-close"
-            onClick={() => setMobileOverlay(null)}
-            aria-label="Stäng panel"
-          >
-            <img
-              src={mobileOverlayClose}
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+        <button
+          type="button"
+          className="mobile-overlay-close"
+          onClick={() => setMobileOverlay(null)}
+          aria-label="Stäng panel"
+        >
+          <img
+            src={mobileOverlayClose}
+            alt=""
+            aria-hidden="true"
+          />
+        </button>
 
-          {/* Vit container - Figma */}
-          <div
-            id="mobile-overlay-panel"
-            className="mobile-overlay-card"
-          >
+        <div
+          id="mobile-overlay-panel"
+          className="mobile-overlay-card"
+        >
 
-            {/* Tillgängliga chattar */}
-            {mobileOverlay === "chats" && (
-              <section className="sidebar-section">
-                <h2>Tillgängliga chattar</h2>
-                <ChatList
-                  chats={chats}
-                  users={users}
-                  chatId={chatId}
-                  currentUserId={currentUserId}
-                  setChatId={setChatId}
-                  clearMessages={clearMessages}
-                />
-              </section>
-            )}
+          {mobileOverlay === "chats" && (
+            <section className="sidebar-section">
+              <h2>Tillgängliga chattar</h2>
+              <ChatList
+                chats={chats}
+                users={users}
+                chatId={chatId}
+                currentUserId={currentUserId}
+                setChatId={setChatId}
+                clearMessages={clearMessages}
+              />
+            </section>
+          )}
 
-            {/* Kontakter */}
-            {mobileOverlay === "contacts" && (
-              <section className="sidebar-section">
-                <h2>Kontakter</h2>
-                <ContactList
-                  users={users}
-                  selectedContact={selectedContact}
-                  setSelectedContact={setSelectedContact}
-                  recipient={recipient}
-                  setRecipient={setRecipient}
-                  handleCreateDM={handleCreateDM}
-                />
-              </section>
-            )}
+          {mobileOverlay === "contacts" && (
+            <section className="sidebar-section">
+              <h2>Kontakter</h2>
+              <ContactList
+                users={users}
+                selectedContact={selectedContact}
+                setSelectedContact={setSelectedContact}
+                recipient={recipient}
+                setRecipient={setRecipient}
+                handleCreateDM={handleCreateDM}
+              />
+            </section>
+          )}
 
-            {/* Språkinställningar */}
-            {mobileOverlay === "settings" && (
-              <section className="settings-section">
-                <h2>Språkinställningar</h2>
-                <LanguageSelector
-                  groupName="mobile-language"
-                  selectedLanguage={selectedLanguage}
-                  setSelectedLanguage={setSelectedLanguage}
-                  setTranslations={setTranslations}
-                />
-              </section>
-            )}
-          </div>
+          {mobileOverlay === "settings" && (
+            <section className="settings-section">
+              <h2>Språkinställningar</h2>
+              <LanguageSelector
+                groupName="mobile-language"
+                selectedLanguage={selectedLanguage}
+                setSelectedLanguage={setSelectedLanguage}
+                setTranslations={setTranslations}
+              />
+            </section>
+          )}
         </div>
-       )
+      </div>
+    )
   );
 }
 

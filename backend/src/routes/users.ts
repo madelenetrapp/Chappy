@@ -1,10 +1,10 @@
+
 import { Router } from "express";
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { dynamoDB } from "../db/dynamoDB.js";
 
 const usersRouter = Router();
 
-//hämtar alla registerade användare från dynamoDB
 usersRouter.get("/", async (_req, res) => {
   try {
     const result = await dynamoDB.send(
@@ -18,7 +18,6 @@ usersRouter.get("/", async (_req, res) => {
       })
     );
 
-    //Returnerar endast användar-id och användarnamn
     const users = (result.Items ?? [])
       .filter(
         (user) =>

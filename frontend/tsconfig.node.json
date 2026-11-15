@@ -1,24 +1,22 @@
 
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo", // Sparar information för snabbare byggen
-    "target": "es2023", // JavaScript-version som koden riktas mot
-    "lib": ["ES2023"], // Tillgängliga JavaScript-typer
-    "types": ["node"], // Node.js-typer
-    "skipLibCheck": true, // Hoppar över typkontroll av bibliotekens deklarationsfiler
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "skipLibCheck": true,
 
-    /* Bundler mode */
-    "module": "nodenext", // Modulsystem enligt Node.js
-    "allowImportingTsExtensions": true, // Tillåter .ts i importvägar
-    "verbatimModuleSyntax": true, // Bevarar imports och exports enligt TS-regler
-    "moduleDetection": "force", // Behandlar filer som moduler
-    "noEmit": true, // Skapar inga JavaScript-filer
+    "module": "nodenext",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
 
-    /* Linting */
-    "noUnusedLocals": true, // Varnar för oanvända lokala variabler
-    "noUnusedParameters": true, // Varnar för oanvända parametrar
-    "erasableSyntaxOnly": true, // Tillåter TS-syntax som kan tas bort utan kodomvandling
-    "noFallthroughCasesInSwitch": true // Förhindrar oavsiktlig fortsättning mellan switch-fall
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"] // Den fil som konfigurationen gäller
+  "include": ["vite.config.ts"]
 }

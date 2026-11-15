@@ -1,4 +1,4 @@
-// Språkval - Figma
+
 const languages: string[] = [
   "Svenska",
   "Engelska",
@@ -14,40 +14,36 @@ type LanguageSelectorProps = {
   setTranslations: (translations: Record<string, string>) => void;
 };
 
-//  språkval med radioknappar
- function LanguageSelector({
+function LanguageSelector({
   groupName,
   selectedLanguage,
   setSelectedLanguage,
   setTranslations,
 }: LanguageSelectorProps) {
-    return (
-      <div className="language-list">
-        {languages.map((language) => (
-          <label
-            className="language-option"
-            key={language}
-          >
-            {/* Radioknapp för valt språk */}
-            <input
-              type="radio"
-              name={groupName}
-              value={language}
-              checked={selectedLanguage === language}
-              onChange={() => {
-                // Uppdaterar användarens valda språk
-                setSelectedLanguage(language);
+  return (
+    <div className="language-list">
+      {languages.map((language) => (
+        <label
+          className="language-option"
+          key={language}
+        >
+          <input
+            type="radio"
+            name={groupName}
+            value={language}
+            checked={selectedLanguage === language}
+            onChange={() => {
+              setSelectedLanguage(language);
 
-                // Tömmer gamla översättningar
-                setTranslations({});
-              }}
-            />
+              setTranslations({});
+            }}
+          />
 
-            <span>{language}</span>
-          </label>
-        ))}
-      </div>
-    );
-  }
+          <span>{language}</span>
+        </label>
+      ))}
+    </div>
+  );
+}
 
-  export default LanguageSelector;
+export default LanguageSelector;

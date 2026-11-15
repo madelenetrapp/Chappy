@@ -1,3 +1,4 @@
+
 .chat-message {
   background-color: #ffffff;
   border: 1px solid #65769d;
@@ -7,19 +8,17 @@
 box-sizing: border-box;
   min-width: 0;
   width: fit-content;
-  overflow-wrap: anywhere;   /*betyder att långa ord eller textsträngar får brytas mitt i ordet om de annars skulle sticka utanför meddelandebubblan.*/
+  overflow-wrap: anywhere;
   font-size: 14px;
   color: #222222;
-  white-space: normal;        /*Tillåter texten att radbrytas automatiskt vid mellanslag*/
+  white-space: normal;
 }
 
-/* användaren placeras alltid till höger */
 .chat-message.user {
   align-self: flex-end;
   background-color: #ffffff;
 }
 
-/* AI-meddelanden placeras till vänster */
 .chat-message.ai {
   align-self: flex-start;
   background-color: #d9f7fa;
@@ -30,27 +29,23 @@ box-sizing: border-box;
   color: white;
 }
 
-/* Översättningsbubbla med ljusblå bakgrund */
 .chat-message.translated-message {
   background-color: #cff5f6;
   color: #192752;
   margin-top: 5px;
 }
 
-/* Placerar varje meddelande och dess översättning */
 .message-wrapper {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-/* Dina meddelanden till höger */
 .message-wrapper.user {
   align-self: flex-end;
   align-items: flex-end;
 }
 
-/* Mottagarens meddelanden till vänster */
 .message-wrapper.other {
   align-self: flex-start;
   align-items: flex-start;
@@ -60,26 +55,3 @@ box-sizing: border-box;
   border-radius: 16px;
   margin: 0;
 }
-
-/*  MEDDELANDEBUBBLOR  */
-
-/* Gemensam styling för alla meddelandebubblor */
-
-/* Användarens meddelanden placeras till höger */
-
-/* Användarens meddelanden har vit bakgrund */
-
-/* AI-meddelanden placeras till vänster */
-
-/* AI-meddelanden har ljusblå bakgrund */
-
-/* Begränsar meddelandebubblornas bredd */
-
-/* Anpassar bubblornas höjd efter texten */
-
-
-/* RESPONSIVE DESIGN */
-/* Anpassar meddelandebubblorna för mobilskärmar */
-
-
-

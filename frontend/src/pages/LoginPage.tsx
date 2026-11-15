@@ -1,51 +1,40 @@
+
 import React, { useState } from "react";
 import { login } from "../api/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 
 
-//visa inloggningssidan
 function LoginPage() {
 
-  //Spararanvändarnamnet som användaren skriver.
   const [username, setUsername] = useState<string>("");
 
-  //Sparar lösenordet som användaren skriver.
   const [password, setPassword] = useState<string>("");
 
   const [error, setError] = useState<string>("");
 
   const navigate = useNavigate();
 
-  //Hanterar formulärets submit (skickar in)
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const { token, userId } = await login(username, password);
-      //Sparar JWT-token och användar-ID i webbläsarens localStorage
-localStorage.setItem("token", token);
-localStorage.setItem("userId", userId);
-      // Skickar användaren till chatten.
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId);
       navigate("/chat");
     } catch {
-      // Visar ett felmeddelande om inloggningen misslyckas.
       setError("Fel användarnamn eller lösenord");
     }
   };
 
 
-  //kör funktionen när formuläret skickas.
-  //e.preventDefault() förhindrar att webbsidan laddas om
   return (
     <div className="login-page">
 
-      {/* Sidhuvud med Chappylogga*/}
       <header className="login-header">
-        {/*TODO:  logga */}
       </header>
 
-      {/* Centrerar formuläret på sidan */}
       <main className="login-main">
         <form className="login-card" onSubmit={handleSubmit}>
           <h1>Logga in</h1>
@@ -54,10 +43,8 @@ localStorage.setItem("userId", userId);
             Välkommen till din arbetsyta
           </p>
 
-          {/* Visar felmeddelande vid misslyckad inloggning */}
           {error && <p className="login-error" role="alert">{error}</p>}
 
-          {/* Användarnamn */}
           <label htmlFor="username">Användarnamn</label>
           <input
             id="username"
@@ -68,7 +55,6 @@ localStorage.setItem("userId", userId);
             required
           />
 
-          {/* Lösenord */}
           <label htmlFor="password">Lösenord</label>
           <input
             id="password"
@@ -79,32 +65,28 @@ localStorage.setItem("userId", userId);
             required
           />
 
-          {/* Skikcar formuläret och anropar handleSubmit */}
           <button className="login-button" type="submit">
             Logga in
           </button>
-          
-          {/* fortsätt till öppna kanaler utan inloggning */}
-          <button 
-          className="login-button guest-button"
-          type="button"
-          onClick={() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("userId");
-            navigate("/chat");
-          }}
+
+          <button
+            className="login-button guest-button"
+            type="button"
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("userId");
+              navigate("/chat");
+            }}
           >
             Fortsätt som gäst
           </button>
 
-          {/* Navigerar till registreringssidan */}
           <Link className="register-link" to="/register">
             Registrera nytt konto
           </Link>
         </form>
       </main>
 
-      {/* Sidfot */}
       <footer className="login-footer">
         Chappy - kommunikation som för oss samman
       </footer>

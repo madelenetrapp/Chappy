@@ -1,8 +1,8 @@
 
 {
-  "files": [], // Inga filer kompileras direkt här
-  "references": [ // Hänvisar till två separata TS-konfigurationer
-    { "path": "./tsconfig.app.json" }, // React-applikationen
-    { "path": "./tsconfig.node.json" } // Node/Vite-konfigurationen
+  "files": [], 
+  "references": [ 
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" } 
   ]
 }
