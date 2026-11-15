@@ -16,6 +16,8 @@ import { getChannels } from "./api/channelsApi.js";
 import type { Channel } from "./api/channelsApi.js";
 // Importerar funktionen som översätter meddelanden via backend
 import { translateMessage } from "./api/translationApi.js";
+import LanguageSelector from "./components/LanguageSelector.js";
+import ChatHeader from "./components/ChatHeader.js";
 // Pilar för att öppna och stänga 
 import leftArrow from "./assets/left-arrow.svg";
 import rightArrow from "./assets/right-arrow.svg";
@@ -23,8 +25,8 @@ import contactIcon from "./assets/contact-icon.svg";
 import mobileOverlayClose from "./assets/mobile-overlay-close.svg";
 import { Lock } from "lucide-react";
 
-// Typ för panelerna på mobil och surfplatta
-type MobileOverlay = "chats" | "contacts" | "settings" | null;
+
+
 
 // Exempeldata från Figma TODO
 // const exampleChats: string[] = [
@@ -44,14 +46,16 @@ type MobileOverlay = "chats" | "contacts" | "settings" | null;
 //   "Emma Karlsson – Teamledare",
 // ];
 
-// Språkval - Figma
-const languages: string[] = [
-  "Svenska",
-  "Engelska",
-  "Arabiska",
-  "Tyska",
-  "Mandarin",
-];
+// // Språkval - Figma
+// const languages: string[] = [
+//   "Svenska",
+//   "Engelska",
+//   "Arabiska",
+//   "Tyska",
+//   "Mandarin",
+// ];
+
+type MobileOverlay = "chats" | "contacts" | "settings" | null;
 
 function App() {
   // Hämtar JWT och användar-ID från sessionStorage  TODO: använd inte session storage //local
@@ -96,12 +100,15 @@ function App() {
   const [selectedContact, setSelectedContact] =
     useState<string | null>(null);
 
-  // Styr vilken overlay som visas på mobil och surfplatta
-  const [mobileOverlay, setMobileOverlay] =
-    useState<MobileOverlay>(null);
+
 
   // Referens för automatisk scrollning
   const messageRef = useRef<HTMLDivElement>(null);
+
+
+  // Styr vilken overlay som visas på mobil och surfplatta
+  const [mobileOverlay, setMobileOverlay] =
+    useState<MobileOverlay>(null);
 
   // Öppnar eller stänger en mobiloverlay
   function toggleMobileOverlay(
@@ -112,13 +119,12 @@ function App() {
     );
   }
 
-  //loggar ut användaren
+  // Loggar ut användaren
   function handleLogout(): void {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
 
-    //laddar om appen utan inloggning
-    window.location.href = "/login"
+    window.location.href = "/login";
   }
 
   // Skapar eller öppnar en DM med angiven användare
@@ -196,7 +202,7 @@ function App() {
 
   // Kontrollerar backend när komponenten monteras
   useEffect(() => {
-     checkBackend();
+    checkBackend();
   }, []);
 
   //hämtar registrerade användare när sidan öppnas
@@ -210,7 +216,7 @@ function App() {
       }
     }
 
-     loadUsers();
+    loadUsers();
   }, []);
   //när app öppnas anropas getUsers(), backend hämtar användarna från backend, setUsers(data) sparar användarna i react state
 
@@ -227,12 +233,12 @@ function App() {
       }
     }
 
-     loadChats();
+    loadChats();
   }, [token]);
 
   // Hämtar meddelanden när användaren byter chatt
   useEffect(() => {
-     loadMessages();
+    loadMessages();
   }, [chatId]);
 
   // Hanterar översättning när meddelanden eller språkval ändras
@@ -277,7 +283,7 @@ function App() {
       }
 
       // startar översättningen
-       translate();
+      translate();
     });
 
     // markerar tidigare översättningar som inaktuella när meddelnadene eller språkval ändras
@@ -305,7 +311,7 @@ function App() {
       }
     }
 
-     loadChannels();
+    loadChannels();
   }, []);
 
   // visar alla kanaler
@@ -406,7 +412,7 @@ function App() {
 
         <button
           type="button"
-          onClick={() =>  handleCreateDM()}
+          onClick={() => handleCreateDM()}
         >
           Starta DM
         </button>
@@ -415,99 +421,45 @@ function App() {
   }
 
   //  språkval med radioknappar
-  function renderLanguages(groupName: string) {
-    return (
-      <div className="language-list">
-        {languages.map((language) => (
-          <label
-            className="language-option"
-            key={language}
-          >
-            {/* Radioknapp för valt språk */}
-            <input
-              type="radio"
-              name={groupName}
-              value={language}
-              checked={selectedLanguage === language}
-              onChange={() => {
-                // Uppdaterar användarens valda språk
-                setSelectedLanguage(language);
+  // function renderLanguages(groupName: string) {
+  //   return (
+  //     <div className="language-list">
+  //       {languages.map((language) => (
+  //         <label
+  //           className="language-option"
+  //           key={language}
+  //         >
+  //           {/* Radioknapp för valt språk */}
+  //           <input
+  //             type="radio"
+  //             name={groupName}
+  //             value={language}
+  //             checked={selectedLanguage === language}
+  //             onChange={() => {
+  //               // Uppdaterar användarens valda språk
+  //               setSelectedLanguage(language);
 
-                // Tömmer gamla översättningar
-                setTranslations({});
-              }}
-            />
+  //               // Tömmer gamla översättningar
+  //               setTranslations({});
+  //             }}
+  //           />
 
-            <span>{language}</span>
-          </label>
-        ))}
-      </div>
-    );
-  }
+  //           <span>{language}</span>
+  //         </label>
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
   // Renderar chattsidan
   return (
     <div className="chat-layout">
 
-      {/* header */}
-      <header className="chat-header">
-
-
-        {/* Tre knappar för mobil och tablett */}
-        <nav
-          className="mobile-nav"
-          aria-label="Chattmeny"
-        >
-          <button
-            type="button"
-            className={
-              mobileOverlay === "chats" ? "active" : ""
-            }
-            onClick={() =>
-              toggleMobileOverlay("chats")
-            }
-            aria-expanded={mobileOverlay === "chats"}
-            aria-controls="mobile-overlay-panel"
-          >Chattar
-          </button>
-
-          <button
-            type="button"
-            className={
-              mobileOverlay === "contacts" ? "active" : ""
-            }
-            onClick={() =>
-              toggleMobileOverlay("contacts")
-            }
-            aria-expanded={mobileOverlay === "contacts"}
-            aria-controls="mobile-overlay-panel"
-          >Kontakter
-          </button>
-
-          <button
-            type="button"
-            className={
-              mobileOverlay === "settings" ? "active" : ""
-            }
-            onClick={() =>
-              toggleMobileOverlay("settings")
-            }
-            aria-expanded={mobileOverlay === "settings"}
-            aria-controls="mobile-overlay-panel"
-          >
-            Språk
-          </button>
-        </nav>
-        <h1>Chappy</h1>
-
-        <button
-          type="button"
-          onClick={handleLogout}
-        >
-          Logga ut
-        </button>
-
-      </header>
+      <ChatHeader
+        mobileOverlay={mobileOverlay}
+        toggleMobileOverlay={toggleMobileOverlay}
+        handleLogout={handleLogout}
+      />
 
       {/* mobil-tablet layout */}
       {mobileOverlay && (
@@ -553,7 +505,12 @@ function App() {
             {mobileOverlay === "settings" && (
               <section className="settings-section">
                 <h2>Språkinställningar</h2>
-                {renderLanguages("mobile-language")}
+                <LanguageSelector
+                  groupName="mobile-language"
+                  selectedLanguage={selectedLanguage}
+                  setSelectedLanguage={setSelectedLanguage}
+                  setTranslations={setTranslations}
+                />
               </section>
             )}
           </div>
@@ -687,7 +644,12 @@ function App() {
             {/* visar språkvaln */}
             {showSettings && (
               <div id="language-settings">
-                {renderLanguages("desktop-language")}
+                <LanguageSelector
+                  groupName="desktop-language"
+                  selectedLanguage={selectedLanguage}
+                  setSelectedLanguage={setSelectedLanguage}
+                  setTranslations={setTranslations}
+                />
               </div>
             )}
           </section>
