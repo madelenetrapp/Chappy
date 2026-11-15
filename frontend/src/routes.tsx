@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute.js";
 const routerConfig = [
   {
     path: "/",
-    element: <GuestPage  />,
+    element: <LoginPage  />,
   },
   {
     path: "/login",
