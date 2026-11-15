@@ -14,6 +14,8 @@ import { getUsers } from "./api/usersApi.js";
 import type { User } from "./api/usersApi.js";
 import { getChannels } from "./api/channelsApi.js";
 import type { Channel } from "./api/channelsApi.js";
+// Importerar funktionen som översätter meddelanden via backend
+import { translateMessage } from "./api/translationApi.js";
 // Pilar för att öppna och stänga 
 import leftArrow from "./assets/left-arrow.svg";
 import rightArrow from "./assets/right-arrow.svg";
@@ -63,13 +65,16 @@ function App() {
   const [chats, setChats] = useState<ChatListItem[]>([]);
 
   // spara kanalerna som hämtas från DynamoDB
- const [channels, setChannels] = useState<Channel[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
 
   // Sparar användarnamnet för en ny DM
   const [recipient, setRecipient] = useState<string>("");
 
   // Sparar meddelandena i den aktuella chatten
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  // sparar översatta meddelnaden med emddelande-id som nyckel
+  const [translations, setTranslations] = useState<Record<string, string>>({});
 
   //sparar registrerade användare från dynamoDB
   const [users, setUsers] = useState<User[]>([]);
@@ -118,8 +123,8 @@ function App() {
 
   // Skapar eller öppnar en DM med angiven användare
   async function handleCreateDM(): Promise<void> {
-     console.log("Token finns:", Boolean(token));
-console.log("Mottagare:", recipient);
+    console.log("Token finns:", Boolean(token));
+    console.log("Mottagare:", recipient);
     // Avbryter om JWT eller användarnamn saknas
     if (!token || !recipient.trim()) return;
 
@@ -130,12 +135,12 @@ console.log("Mottagare:", recipient);
       // Sparar konversationens ID
       setChatId(chat.chatId);
 
-     // uppdaaterar listan med konversationer
-     const updatedChats = await getChats(token);
-     setChats(updatedChats);
+      // uppdaaterar listan med konversationer
+      const updatedChats = await getChats(token);
+      setChats(updatedChats);
 
-     //Tömmer tidigare meddelanden
-     setMessages([]);
+      //Tömmer tidigare meddelanden
+      setMessages([]);
 
 
       console.log("DM öppnad", chat.chatId);
@@ -191,7 +196,7 @@ console.log("Mottagare:", recipient);
 
   // Kontrollerar backend när komponenten monteras
   useEffect(() => {
-    void checkBackend();
+     checkBackend();
   }, []);
 
   //hämtar registrerade användare när sidan öppnas
@@ -205,7 +210,7 @@ console.log("Mottagare:", recipient);
       }
     }
 
-    void loadUsers();
+     loadUsers();
   }, []);
   //när app öppnas anropas getUsers(), backend hämtar användarna från backend, setUsers(data) sparar användarna i react state
 
@@ -222,14 +227,65 @@ console.log("Mottagare:", recipient);
       }
     }
 
-    void loadChats();
+     loadChats();
   }, [token]);
 
   // Hämtar meddelanden när användaren byter chatt
   useEffect(() => {
-    void loadMessages();
+     loadMessages();
   }, [chatId]);
 
+  // Hanterar översättning när meddelanden eller språkval ändras
+  useEffect(() => {
+
+    // Visar om denna översättning fortfarande är aktuell
+    let isActive = true;
+
+    // Går igenom alla meddelanden
+    messages.forEach((message) => {
+      // Hoppar över egna meddelanden
+      if (message.senderId === currentUserId) return;
+
+      // hoppar över meddelnaden som saknar text
+      if (!message.text.trim()) return;
+
+      // Hoppar över meddelanden som redan översatts
+      if (translations[message.id]) return;
+
+      // Skickar meddelandet till backend för översättning
+      async function translate(): Promise<void> {
+
+        try {
+          // hämtar översättningen från backend 
+          const result = await translateMessage(
+            message.text,
+            selectedLanguage,
+          );
+
+          // Avbryter om översättningen inte längre är aktuell
+          if (!isActive) return;
+
+          // Sparar översättningen med meddelandets ID som nyckel
+          setTranslations((previous) => ({
+            ...previous,
+            [message.id]: result.translatedText,
+          }));
+        } catch (error) {
+          // hanterar fel om översättningen misslyckades
+          console.error("Kunde inte översätta meddelandet;", error)
+        }
+      }
+
+      // startar översättningen
+       translate();
+    });
+
+    // markerar tidigare översättningar som inaktuella när meddelnadene eller språkval ändras
+    return () => {
+      isActive = false;
+    };
+
+  }, [messages, selectedLanguage, currentUserId]);
   // Scrollar längst ner när meddelandelistan uppdateras
   useEffect(() => {
     if (!messageRef.current) return;
@@ -249,35 +305,35 @@ console.log("Mottagare:", recipient);
       }
     }
 
-    void loadChannels();
+     loadChannels();
   }, []);
 
   // visar alla kanaler
   function renderChannels() {
     return (
-    <div className="sidebar-list">
-      {channels.map((channel) => (
-        <button
-          key={channel.chatId}
-          type="button"
-          // markerar den valda kanalen med css klass active, aria-pressed visar för hjälpmedel om kanalen är vald
-          className={`sidbar-item ${chatId === channel.chatId ? "activ" : ""}`}
-          aria-pressed={chatId === channel.chatId}
-          onClick={() => {
-            setChatId(channel.chatId);
-            setMessages([]);
-          }}
-        >
-          {/* reacts egna ikoner */}
-          {channel.locked && <Lock size={14} className="channel-lock" />}  
-          {channel.name}
-        </button>
-      ))}
-    </div>
+      <div className="sidebar-list">
+        {channels.map((channel) => (
+          <button
+            key={channel.chatId}
+            type="button"
+            // markerar den valda kanalen med css klass active, aria-pressed visar för hjälpmedel om kanalen är vald
+            className={`sidbar-item ${chatId === channel.chatId ? "activ" : ""}`}
+            aria-pressed={chatId === channel.chatId}
+            onClick={() => {
+              setChatId(channel.chatId);
+              setMessages([]);
+            }}
+          >
+            {/* reacts egna ikoner */}
+            {channel.locked && <Lock size={14} className="channel-lock" />}
+            {channel.name}
+          </button>
+        ))}
+      </div>
     )
   }
 
- 
+
   // Visar användarens sparade konversationer
   function renderChats() {
     return (
@@ -286,9 +342,8 @@ console.log("Mottagare:", recipient);
           <button
             key={chat.chatId}
             type="button"
-            className={`sidebar-item ${
-              chatId === chat.chatId ? "active" : ""
-            }`}
+            className={`sidebar-item ${chatId === chat.chatId ? "active" : ""
+              }`}
             aria-pressed={chatId === chat.chatId}
             onClick={() => {
               setChatId(chat.chatId);
@@ -296,9 +351,9 @@ console.log("Mottagare:", recipient);
             }}
           >
             {users.find((user) =>
-  user.userId !== currentUserId &&
-  chat.chatId.includes(user.userId)
-)?.username ?? chat.chatId}
+              user.userId !== currentUserId &&
+              chat.chatId.includes(user.userId)
+            )?.username ?? chat.chatId}
           </button>
         ))}
       </div>
@@ -311,33 +366,33 @@ console.log("Mottagare:", recipient);
     return (
       <div className="sidebar-list contacts-container">
         <div className="contacts-scroll">
-        {users.map((user) => (
-          <button
-            key={user.userId}
-            type="button"
-            className={`sidebar-item contact-item ${selectedContact === user.username ? "active" : ""
-              }`}
-            aria-pressed={selectedContact === user.username}
-            onClick={() => {
-              // Markerar kontakten och fyller i användarnamnet
-              setSelectedContact(user.username);
-              setRecipient(user.username);
-            }}
-          >
-            {/* Kontaktikon */}
-            <img
-              src={contactIcon}
-              className="contact-icon"
-              alt=""
-              aria-hidden="true"
-            />
+          {users.map((user) => (
+            <button
+              key={user.userId}
+              type="button"
+              className={`sidebar-item contact-item ${selectedContact === user.username ? "active" : ""
+                }`}
+              aria-pressed={selectedContact === user.username}
+              onClick={() => {
+                // Markerar kontakten och fyller i användarnamnet
+                setSelectedContact(user.username);
+                setRecipient(user.username);
+              }}
+            >
+              {/* Kontaktikon */}
+              <img
+                src={contactIcon}
+                className="contact-icon"
+                alt=""
+                aria-hidden="true"
+              />
 
-            <span className="contact-name">
-              {user.username}
-            </span>
+              <span className="contact-name">
+                {user.username}
+              </span>
 
-          </button>
-        ))}
+            </button>
+          ))}
         </div>
 
         {/* funktion för att starta DM */}
@@ -351,7 +406,7 @@ console.log("Mottagare:", recipient);
 
         <button
           type="button"
-          onClick={() => void handleCreateDM()}
+          onClick={() =>  handleCreateDM()}
         >
           Starta DM
         </button>
@@ -374,9 +429,13 @@ console.log("Mottagare:", recipient);
               name={groupName}
               value={language}
               checked={selectedLanguage === language}
-              onChange={() =>
-                setSelectedLanguage(language)
-              }
+              onChange={() => {
+                // Uppdaterar användarens valda språk
+                setSelectedLanguage(language);
+
+                // Tömmer gamla översättningar
+                setTranslations({});
+              }}
             />
 
             <span>{language}</span>
@@ -392,7 +451,7 @@ console.log("Mottagare:", recipient);
 
       {/* header */}
       <header className="chat-header">
-        
+
 
         {/* Tre knappar för mobil och tablett */}
         <nav
@@ -439,11 +498,11 @@ console.log("Mottagare:", recipient);
             Språk
           </button>
         </nav>
-<h1>Chappy</h1>
-        
+        <h1>Chappy</h1>
+
         <button
-        type="button"
-        onClick={handleLogout}
+          type="button"
+          onClick={handleLogout}
         >
           Logga ut
         </button>
@@ -587,9 +646,8 @@ console.log("Mottagare:", recipient);
               <ChatMessageComponent
                 key={message.id}
                 message={message}
-                currentUserId={
-                  currentUserId ?? ""
-                }
+                currentUserId={currentUserId ?? ""}
+                translatedText={translations[message.id]}
               />
             ))}
           </div>

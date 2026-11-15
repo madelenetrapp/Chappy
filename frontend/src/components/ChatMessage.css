@@ -30,6 +30,36 @@ box-sizing: border-box;
   color: white;
 }
 
+/* Översättningsbubbla med ljusblå bakgrund */
+.chat-message.translated-message {
+  background-color: #cff5f6;
+  color: #192752;
+  margin-top: 5px;
+}
+
+/* Placerar varje meddelande och dess översättning */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Dina meddelanden till höger */
+.message-wrapper.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+/* Mottagarens meddelanden till vänster */
+.message-wrapper.other {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.chat-message {
+  border-radius: 16px;
+  margin: 0;
+}
 
 /*  MEDDELANDEBUBBLOR  */
 
