@@ -8,6 +8,7 @@ import path from "node:path"; // Hanterar sökvägar till filer och mappar
 import { fileURLToPath } from "node:url"; // Omvandlar filens URL till en vanlig sökväg
 import { usersRouter } from "./routes/users.js";
 import { channelsRouter } from "./routes/channels.js";// Importerar routern som hanterar kanaler.
+import { translationRouter } from "./routes/translation.js"; // Importerar routern som hanterar AI-översättning av meddelanden
 
 const app = express(); // Skapar Express-servern
 const PORT = Number(process.env.PORT) || 3001; // Port från miljövariabel, annars 3001
@@ -51,6 +52,9 @@ app.use("/api/users", usersRouter)
 
 // Gör React-appens byggda filer tillgängliga via Express
 app.use(express.static(frontendPath));
+
+// Kopplar översättningsroutern till API:et
+app.use("/api/translation", translationRouter);
 
 // Visar React-appen när användaren besöker en frontend-route
 app.get("/{*path}", (_req, res) => {
