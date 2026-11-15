@@ -4,12 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import type { ChatListItem } from "./api/chatsApi.js";
 import type { Channel } from "./api/channelsApi.js";
 import type { User } from "./api/usersApi.js";
-import ContactList from "./components/ContactList.js";
 import ChatSidebar from "./components/ChatSidebar.js";
 import { getHealth } from "./api/healthApi.js";
 import { getMessages, sendMessage } from "./api/messagesApi.js";
 import { createDM, getChats } from "./api/chatsApi.js";
-import ChatList from "./components/ChatList.js";
 // Komponenter
 // Typ för chattmeddelanden
 import type { ChatMessage } from "./schemas/chatMessageSchema";
@@ -19,13 +17,10 @@ import { getChannels } from "./api/channelsApi.js";
 import ChatWindow from "./components/ChatWindow.js";
 // Importerar funktionen som översätter meddelanden via backend
 import { translateMessage } from "./api/translationApi.js";
-import LanguageSelector from "./components/LanguageSelector.js";
 import ChatHeader from "./components/ChatHeader.js";
-
+import MobileOverlay from "./components/MobileOverlay.js";
 // Pilar för att öppna och stänga 
 
-
-import mobileOverlayClose from "./assets/mobile-overlay-close.svg";
 
 
 
@@ -464,75 +459,24 @@ function App() {
         handleLogout={handleLogout}
       />
 
-      {/* mobil-tablet layout */}
-      {mobileOverlay && (
-        <div className="mobile-overlay">
-
-          {/* Stänger overlayen */}
-          <button
-            type="button"
-            className="mobile-overlay-close"
-            onClick={() => setMobileOverlay(null)}
-            aria-label="Stäng panel"
-          >
-            <img
-              src={mobileOverlayClose}
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
-
-          {/* Vit container - Figma */}
-          <div
-            id="mobile-overlay-panel"
-            className="mobile-overlay-card"
-          >
-
-            {/* Tillgängliga chattar */}
-            {mobileOverlay === "chats" && (
-              <section className="sidebar-section">
-                <h2>Tillgängliga chattar</h2>
-                <ChatList
-                  chats={chats}
-                  users={users}
-                  chatId={chatId}
-                  currentUserId={currentUserId}
-                  setChatId={setChatId}
-                  clearMessages={() => setMessages([])}
-                />
-              </section>
-            )}
-
-            {/* Kontakter */}
-            {mobileOverlay === "contacts" && (
-              <section className="sidebar-section">
-                <h2>Kontakter</h2>
-                <ContactList
-                  users={users}
-                  selectedContact={selectedContact}
-                  setSelectedContact={setSelectedContact}
-                  recipient={recipient}
-                  setRecipient={setRecipient}
-                  handleCreateDM={handleCreateDM}
-                />
-              </section>
-            )}
-
-            {/* Språkinställningar */}
-            {mobileOverlay === "settings" && (
-              <section className="settings-section">
-                <h2>Språkinställningar</h2>
-                <LanguageSelector
-                  groupName="mobile-language"
-                  selectedLanguage={selectedLanguage}
-                  setSelectedLanguage={setSelectedLanguage}
-                  setTranslations={setTranslations}
-                />
-              </section>
-            )}
-          </div>
-        </div>
-      )}
+      <MobileOverlay
+        mobileOverlay={mobileOverlay}
+        setMobileOverlay={setMobileOverlay}
+        chats={chats}
+        users={users}
+        chatId={chatId}
+        currentUserId={currentUserId}
+        setChatId={setChatId}
+        clearMessages={() => setMessages([])}
+        selectedContact={selectedContact}
+        setSelectedContact={setSelectedContact}
+        recipient={recipient}
+        setRecipient={setRecipient}
+        handleCreateDM={handleCreateDM}
+        selectedLanguage={selectedLanguage}
+        setSelectedLanguage={setSelectedLanguage}
+        setTranslations={setTranslations}
+      />
 
       {/* layout */}
       <div className="chat-main">
