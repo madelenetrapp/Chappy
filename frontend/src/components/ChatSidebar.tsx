@@ -1,4 +1,3 @@
-
 import ChannelList from "./ChannelList.js";
 import ChatList from "./ChatList.js";
 import ContactList from "./ContactList.js";
@@ -26,7 +25,7 @@ type ChatSidebarProps = {
   setRecipient: (username: string) => void;
   handleCreateDM: () => Promise<void>;
 };
-
+        
 function ChatSidebar({
   channels,
   chats,
@@ -57,8 +56,8 @@ function ChatSidebar({
           chatId={chatId}
           setChatId={setChatId}
           setMessages={clearMessages}
-        />
-      </section>
+            />
+          </section>
 
       <section className="sidebar-section">
         <button
@@ -81,19 +80,20 @@ function ChatSidebar({
           />
         </button>
 
-        {showChats && (
-          <div id="available-chats">
-            <ChatList
-              chats={chats}
-              users={users}
-              chatId={chatId}
-              currentUserId={currentUserId}
-              setChatId={setChatId}
-              clearMessages={clearMessages}
-            />
-          </div>
-        )}
-      </section>
+            {/* Visar chattlistan */}
+            {showChats && (
+              <div id="available-chats">
+                <ChatList
+                  chats={chats}
+                  users={users}
+                  chatId={chatId}
+                  currentUserId={currentUserId}
+                  setChatId={setChatId}
+                  clearMessages={clearMessages}
+                />
+              </div>
+            )}
+          </section>
 
       <section className="sidebar-section">
         <button
@@ -116,21 +116,22 @@ function ChatSidebar({
           />
         </button>
 
-        {showContacts && (
-          <div id="contacts">
-            <ContactList
-              users={users}
-              selectedContact={selectedContact}
-              setSelectedContact={setSelectedContact}
-              recipient={recipient}
-              setRecipient={setRecipient}
-              handleCreateDM={handleCreateDM}
-            />
-          </div>
-        )}
-      </section>
-    </aside>
-  );
+            {/* Visar kontaktlistan */}
+            {showContacts && (
+              <div id="contacts">
+                <ContactList
+                  users={users}
+                  selectedContact={selectedContact}
+                  setSelectedContact={setSelectedContact}
+                  recipient={recipient}
+                  setRecipient={setRecipient}
+                  handleCreateDM={handleCreateDM}
+                />
+              </div>
+            )}
+          </section>
+        </aside>
+          );
 }
 
 export default ChatSidebar;
