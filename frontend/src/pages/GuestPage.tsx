@@ -9,7 +9,7 @@ function GuestPage() {
         <Link to="/login">Logga in</Link>
         <Link to="/register">Registrera konto</Link>
       </nav>
-      
+      <App />
     </div>
   )
 }

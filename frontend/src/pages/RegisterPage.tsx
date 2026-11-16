@@ -20,8 +20,8 @@ function RegisterPage() {
 
       const { token, userId } = await login(username, password);
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId);
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userId", userId);
 
       navigate("/chat");
 
