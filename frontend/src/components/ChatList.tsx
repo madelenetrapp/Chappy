@@ -11,7 +11,7 @@ type ChatListProps = {
   clearMessages: () => void;
 };
 
-  function ChatList({
+function ChatList({
   chats,
   users,
   chatId,
@@ -19,28 +19,30 @@ type ChatListProps = {
   setChatId,
   clearMessages,
 }: ChatListProps) {
-    return (
-      <div className="sidebar-list">
-        {chats.map((chat) => (
-          <button
-            key={chat.chatId}
-            type="button"
-            className={`sidebar-item ${chatId === chat.chatId ? "active" : ""
-              }`}
-            aria-pressed={chatId === chat.chatId}
-            onClick={() => {
-              setChatId(chat.chatId);
-              clearMessages();
-            }}
-          >
-            {users.find((user) =>
-              user.userId !== currentUserId &&
-              chat.chatId.includes(user.userId)
-            )?.username ?? chat.chatId}
-          </button>
-        ))}
-      </div>
-    );
-  }
+  return (
+    <div className="sidebar-list">
+      {chats.map((chat) => (
+        <button
+          key={chat.chatId}
+          type="button"
+          className={`sidebar-item ${chatId === chat.chatId ? "active" : ""
+            }`}
+          aria-pressed={chatId === chat.chatId}
+          onClick={() => {
+            if (chatId === chat.chatId) return;
 
-  export default ChatList;
+            setChatId(chat.chatId);
+            clearMessages();
+          }}
+        >
+          {users.find((user) =>
+            user.userId !== currentUserId &&
+            chat.chatId.includes(user.userId)
+          )?.username ?? chat.chatId}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export default ChatList;

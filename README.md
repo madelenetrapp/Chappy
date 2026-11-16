@@ -4,6 +4,7 @@ Chappy är en chattapplikation där användare kan skriva meddelanden i olika ka
 
 Projektet är byggt med React, TypeScript, Node.js, Express och AWS DynamoDB.
 
+
 ## Innehållsförteckning
 
 - [Förord](#förord)
@@ -13,9 +14,9 @@ Projektet är byggt med React, TypeScript, Node.js, Express och AWS DynamoDB.
 - [API](#api)
 - [Databastabell](#databastabell)
 - [Projektstruktur](#projektstruktur)
-- [Status och testning](#status och testning)
+- [Status och testning](#status-och-testning)
+- [Om projektet](#om-projektet)
 
----
 
 ## Förord
 
@@ -45,6 +46,7 @@ Projektet har också funktioner för registrering, inloggning och privata meddel
 | React Router | Hanterar navigering mellan sidor |
 | CSS | Används för design och responsiv layout |
 
+
 ## Kom igång
 
 Installera projektets beroenden från projektets rotmapp:
@@ -59,9 +61,10 @@ Skapa `backend/.env` med följande miljövariabler:
 AWS_REGION=eu-north-1
 AWS_ACCESS_KEY_ID=DIN_AWS_ACCESS_KEY
 AWS_SECRET_ACCESS_KEY=DIN_AWS_SECRET_KEY
+JWT_SECRET=DIN_HEMLIGA_JWT_NYCKEL
 ```
 
-Använd dina egna AWS-uppgifter.
+Använd dina egna AWS-uppgifter och en lång, slumpmässigt genererad JWT-nyckel.
 
 Skapa `frontend/.env.local`:
 
@@ -100,8 +103,7 @@ npm run build -w frontend
 
 DynamoDB-tabellen `Chappy` behöver finnas i det AWS-konto som används.
 
-
----
+Miljöfilerna `.env` och `.env.local` ska inte laddas upp till GitHub eftersom de kan innehålla känsliga uppgifter.
 
 ## Funktioner
 
@@ -136,11 +138,17 @@ Backend tar emot meddelandet och sparar det i DynamoDB.
 
 När en användare öppnar en chatt hämtas meddelandena från databasen och visas i frontend.
 
+
 ### Språk
 
 Chappy har ett språkval i gränssnittet.
 
-Projektet omfattar även AI-baserade språkfunktioner. Dessa behöver dokumenteras när det är bekräftat vilka funktioner som är färdiga och hur de används.
+Applikationen använder AI för att översätta meddelanden mellan olika språk.
+
+Språkfunktionen gör det möjligt för användare att kommunicera med varandra även om de använder olika språk.
+
+AI-översättningen är färdigutvecklad och testad.
+
 
 ### Responsiv design
 
@@ -182,29 +190,38 @@ Kontrollerar att Express-servern svarar. Endpointen testar inte anslutningen til
 |---|---|
 | 200 OK | Backend svarar |
 
+
 ### Messages
 
 | Endpoint | Metod | Funktion |
 |---|---|---|
-| `/api/messages` | GET | Hämtar sparad chatthistorik |
-| `/api/messages` | POST | Skapar och sparar ett meddelande |
+| `/api/messages/:chatId` | GET | Hämtar sparad chatthistorik |
+| `/api/messages/:chatId` | POST | Skapar och sparar ett meddelande |
 
-#### GET /api/messages
+#### GET /api/messages/:chatId
 
-Hämtar meddelanden från DynamoDB.
+Hämtar meddelanden från en specifik chatt i DynamoDB.
 
-I den ursprungliga versionen användes den tillfälligt hårdkodade chatten `CHAT#456`.
+Varje chatt har ett eget `chatId`. Backend använder detta ID för att hämta rätt meddelanden.
+
+**Exempel på anrop:**
+
+```http
+GET /api/messages/abc123
+```
 
 **Exempel på response:**
 
 ```json
 [
   {
-    "pk": "CHAT#456",
+    "pk": "CHAT#abc123",
     "sk": "MESSAGE#2026-10-30T14:56:56.768Z#4b04f0f1-9a44-44ce-903b-78f66b3aa5ec",
     "id": "4b04f0f1-9a44-44ce-903b-78f66b3aa5ec",
+    "chatId": "abc123",
     "text": "Hej!",
-    "sender": "user"
+    "senderId": "user123",
+    "createdAt": "2026-10-30T14:56:56.768Z"
   }
 ]
 ```
@@ -216,9 +233,9 @@ I den ursprungliga versionen användes den tillfälligt hårdkodade chatten `CHA
 | 200 OK | Meddelandena hämtades |
 | 500 Internal Server Error | Meddelandena kunde inte hämtas |
 
-#### POST /api/messages
+#### POST /api/messages/:chatId
 
-Tar emot ett meddelande, validerar texten och sparar det i DynamoDB.
+Tar emot ett meddelande, validerar informationen och sparar det i DynamoDB.
 
 **Request body:**
 
@@ -233,7 +250,7 @@ Tar emot ett meddelande, validerar texten och sparar det i DynamoDB.
 ```javascript
 const payload = { text: "Hej!" };
 
-const res = await fetch("http://localhost:3001/api/messages", {
+const res = await fetch("http://localhost:3001/api/messages/abc123", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -251,12 +268,14 @@ Texten måste vara en sträng som inte är tom.
 ```json
 {
   "id": "4b04f0f1-9a44-44ce-903b-78f66b3aa5ec",
+  "chatId": "abc123",
   "text": "Hej!",
-  "sender": "user"
+  "senderId": "user123",
+  "createdAt": "2026-10-30T14:56:56.768Z"
 }
 ```
 
-Servern skapar ett nytt unikt ID för varje meddelande.
+Servern skapar ett nytt unikt ID för varje meddelande och sparar det i den aktuella chatten.
 
 **Statuskoder:**
 
@@ -265,6 +284,7 @@ Servern skapar ett nytt unikt ID för varje meddelande.
 | 201 Created | Meddelandet sparades |
 | 400 Bad Request | Meddelandet innehåller felaktig data |
 | 500 Internal Server Error | Meddelandet kunde inte sparas |
+
 
 ### Övriga API-funktioner
 
@@ -277,33 +297,51 @@ Projektet innehåller också arbete med API-funktioner för:
 - Meddelanden i öppna och låsta kanaler
 - Privata meddelanden
 
-De exakta endpoint-adresserna och statuskoderna behöver kontrolleras mot den senaste backendkoden innan de läggs till här.
 
 ---
 
+
 ## Databastabell
 
-Chappy använder AWS DynamoDB för att lagra information.
+Chappy använder AWS DynamoDB för att lagra användare, kanaler, privata konversationer och meddelanden.
 
 Databastabellen heter `Chappy` och använder två nycklar:
 
 - **pk (partition key):** Anger vilken användare eller chatt informationen tillhör.
-- **sk (sort key):** Anger vilken typ av information som sparas.
+- **sk (sort key):** Anger vilken typ av information som sparas och identifierar posten inom partitionen.
 
-Exempel från den ursprungliga databasen:
+### Databasstruktur
 
 | pk | sk | Information |
 |---|---|---|
-| CHAT#456 | METADATA | Information om chatten |
-| CHAT#456 | MESSAGE#tidpunkt#uuid | Meddelande |
-| USER#123 | PROFILE | Användaruppgifter |
-| USER#123 | SETTINGS | Användarinställningar |
+| `USER#userId` | `PROFILE` | Användaruppgifter, inklusive användarnamn och hashat lösenord |
+| `USERNAME#username` | `RESERVATION` | Kopplar ett användarnamn till ett användar-ID |
+| `USER#userId` | `CHAT#chatId` | Koppling mellan en användare och en privat konversation |
+| `CHAT#chatId` | `METADATA` | Information om chatten eller kanalen |
+| `CHAT#chatId` | `MESSAGE#timestamp#uuid` | Ett sparat meddelande i chatten |
+
+### Användare
+
+När en användare registrerar sig skapas en användarprofil i DynamoDB.
+
+Lösenordet hashats med bcrypt innan det sparas.
+
+Användarnamnet reserveras separat för att förhindra att flera användare registrerar samma användarnamn.
+
+### Kanaler och privata meddelanden
+
+Chappy använder samma databastabell för öppna kanaler, låsta kanaler och privata konversationer.
+
+Varje chatt identifieras med ett unikt `chatId`.
+
+Meddelanden sparas med chattens ID som partition key och en sort key som innehåller tidsstämpel och ett unikt meddelande-ID.
+
+För privata konversationer sparas även kopplingar mellan användarna och deras chattar.
+
+Backend kontrollerar att användaren har behörighet innan meddelanden från låsta kanaler eller privata konversationer lämnas ut.
 
 Genom att använda `pk` och `sk` kan backend hämta information som hör till en viss användare eller chatt.
 
-Projektet har även utökats med hantering av kanaler och privata meddelanden. Den fullständiga nyckelstrukturen behöver kontrolleras mot den aktuella databasen.
-
----
 
 ## Projektstruktur
 
@@ -330,7 +368,7 @@ Chappy/
 │   │   └── main.tsx
 │   └── package.json
 │
-├── shared/
+|
 └── package.json
 ```
 
@@ -345,12 +383,6 @@ Backend innehåller servern, API-routes, databaskopplingen och hanteringen av an
 Frontend innehåller sidor, komponenter, API-anrop och CSS.
 
 Gränssnittet är uppdelat i mindre komponenter för exempelvis chattmeddelanden, skrivfält, sidopaneler och språkval.
-
-### Shared
-
-Den gemensamma delen är avsedd för kod och typer som kan användas av både frontend och backend.
-
----
 
 ## Status och testning
 
